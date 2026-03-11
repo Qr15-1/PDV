@@ -1,0 +1,35 @@
+---
+// src/components/MetricCard.astro
+
+interface Props {
+  label: string;
+  value: string | null;
+  icon: string;       // SVG markup
+  variant?: string;   // CSS class suffix (e.g. "ventas", "costo")
+  smallValue?: boolean;
+}
+
+const { label, value, icon, variant = "", smallValue = false } = Astro.props;
+---
+
+<div class={`metric-card ${variant ? `metric-card--${variant}` : ""}`}>
+  <div class="metric-icon">
+    {icon.startsWith("/") ? (
+      <img src={icon} alt="" class="metric-icon-img" />
+    ) : (
+      <Fragment set:html={icon} />
+    )}
+  </div>
+  <p class="metric-label">{label}</p>
+  <p class={`metric-value ${smallValue ? "metric-value--sm" : ""}`}>
+    {value ?? "—"}
+  </p>
+</div>
+
+<style is:global>
+  .metric-icon-img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+  }
+</style>

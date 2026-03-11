@@ -1,0 +1,300 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Sidebar from "../components/Sidebar.astro";
+import MobileHeader from "../components/MobileHeader.astro";
+import "../styles/comunidad.css";
+
+const currentPath = Astro.url.pathname;
+
+const posts = [
+  { id: 1, title: "Falta de personal en la sede de Maturín", snippet: "Lorem Ipsum is simply dummy text of the printing and survived not...", author: "Manuel Faria", time: "Hace 2 semanas aprox.", body: `<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into</p><p>Electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p><h3>Posibles problemas</h3><p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into</p><p>Electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker.</p>` },
+  { id: 2, title: "Nuevo menú de temporada disponible", snippet: "Se ha actualizado el menú con las nuevas opciones de temporada...", author: "Ana Rodríguez", time: "Hace 1 semana aprox.", body: `<p>Se ha actualizado el menú con las nuevas opciones de temporada. Las pizzas especiales incluyen ingredientes frescos y combinaciones únicas que estarán disponibles durante los próximos dos meses.</p><h3>Nuevas opciones</h3><p>Pizza Tropical con piña caramelizada y jamón ahumado. Pizza Mediterránea con aceitunas, tomate seco y queso feta. Pizza BBQ Especial con pollo a la parrilla y cebolla crujiente.</p><p>Por favor, asegúrense de comunicar estas novedades al equipo de atención al cliente para que puedan recomendar las opciones a los clientes.</p>` },
+  { id: 3, title: "Actualización de protocolos de higiene", snippet: "Nuevos lineamientos de seguridad alimentaria para todas las sedes...", author: "Carlos Méndez", time: "Hace 3 días", body: `<p>Se han actualizado los protocolos de higiene y seguridad alimentaria. Todos los empleados deben leer y firmar conformidad con los nuevos lineamientos antes del viernes.</p><h3>Cambios principales</h3><p>Uso obligatorio de guantes de nitrilo durante la preparación. Verificación de temperatura del refrigerador cada 4 horas con registro digital. Sanitización de superficies cada hora durante horas pico.</p><p>El equipo de supervisión realizará auditorías sin previo aviso para verificar el cumplimiento.</p>` },
+  { id: 4, title: "Resultados del mes de septiembre", snippet: "Las ventas del mes pasado superaron las expectativas en un 15%...", author: "Laura Torres", time: "Hace 5 días", body: `<p>Las ventas del mes de septiembre superaron las expectativas en un 15%. Este crecimiento se atribuye a las campañas de marketing en redes sociales y a la introducción de los combos familiares.</p><h3>Detalles</h3><p>Sede Maturín: +18% vs mes anterior. Sede Caracas: +12% vs mes anterior. Sede Valencia: +15% vs mes anterior.</p><p>Se reconoce el esfuerzo de todos los equipos. Vamos por un octubre aún mejor.</p>` },
+  { id: 5, title: "Mantenimiento programado del horno sede centro", snippet: "Se realizará mantenimiento preventivo del horno principal el próximo...", author: "Roberto Díaz", time: "Hace 1 semana aprox.", body: `<p>Se realizará mantenimiento preventivo del horno principal de la sede centro el próximo martes. Durante el mantenimiento (aprox. 4 horas), se usará el horno secundario para las operaciones.</p><p>Es importante coordinar los turnos para minimizar el impacto en la producción. Los supervisores deben ajustar los horarios de preparación de masa.</p>` },
+  { id: 6, title: "Capacitación obligatoria en servicio al cliente", snippet: "Todos los empleados de atención deben completar el módulo online...", author: "Manuel Faria", time: "Hace 2 semanas aprox.", body: `<p>Se ha habilitado un nuevo módulo de capacitación online sobre servicio al cliente. Todos los empleados del área de atención deben completarlo antes del fin de mes.</p><h3>Contenido del módulo</h3><p>Manejo de quejas y situaciones difíciles. Técnicas de venta sugestiva. Protocolo de bienvenida y despedida.</p><p>El módulo tiene una duración aproximada de 45 minutos y se puede completar desde cualquier dispositivo.</p>` },
+];
+---
+
+<Layout>
+  <div class="app-container">
+    <Sidebar />
+
+    <div class="mobile-layout">
+      <MobileHeader />
+
+      <main class="dashboard-panel com-page">
+
+        <!-- Header -->
+        <header class="com-top-header">
+          <div class="com-top-left">
+            <nav class="breadcrumb">
+              <img src="/icons/COMMUNYTI.png" class="breadcrumb-icon" alt="" />
+              <span class="breadcrumb-text">Comunidad / <span class="breadcrumb-current" id="com-breadcrumb">Noticias de Verdad</span></span>
+            </nav>
+            <h1 class="greeting" id="com-greeting">Cargando...</h1>
+            <p class="current-date" id="com-date">Cargando fecha...</p>
+          </div>
+          <div class="header-actions">
+            <div class="user-pill com-user-pill">
+              <span class="username">username</span>
+              <div class="user-avatar"></div>
+            </div>
+            <button class="logout-btn" id="com-logout-btn" title="Cerrar sesión">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Cerrar sesión
+            </button>
+          </div>
+        </header>
+
+        <!-- Wrapper que contiene ambas vistas -->
+        <div class="com-wrapper">
+
+          <!-- ═══ VISTA LISTA ═══ -->
+          <div class="com-list-view" id="com-list">
+
+            <!-- Buscador -->
+            <div class="com-search-wrap">
+              <input type="text" class="com-search" id="com-search" placeholder="# · Buscar en las noticias" />
+              <svg class="com-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+
+            <!-- Posts -->
+            {posts.map((post) => (
+              <div class="com-post-card" data-post-id={post.id}>
+                <div class="com-post-left">
+                  <p class="com-post-title">{post.title}</p>
+                  <p class="com-post-snippet">{post.snippet}</p>
+                </div>
+                <div class="com-post-right">
+                  <p class="com-post-author">Escrito por {post.author}</p>
+                  <p class="com-post-time">{post.time}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <!-- ═══ VISTA DETALLE ═══ -->
+          <div class="com-detail-view" id="com-detail">
+            <button class="com-back-btn" id="com-back-btn" title="Volver al listado">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+
+            <div class="com-detail-inner">
+              <div class="com-beto-area">
+                <img src="/icons/BETO.png" class="com-beto-img" alt="Beto" />
+              </div>
+              <div class="com-detail-content" id="com-detail-content">
+                <h2 class="com-detail-title" id="com-detail-title"></h2>
+                <p class="com-detail-author" id="com-detail-author"></p>
+                <div class="com-detail-body" id="com-detail-body"></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /com-wrapper -->
+
+      </main>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline define:vars={{ posts }}>
+(function() {
+
+  // ── Greeting & Date ──
+  function updateHeader() {
+    var hora = new Date().getHours();
+    var saludo = "Buenas noches";
+    if (hora >= 5 && hora < 12) saludo = "Buenos días";
+    else if (hora >= 12 && hora < 19) saludo = "Buenas tardes";
+    var g = document.getElementById("com-greeting");
+    if (g) g.textContent = saludo + ", gerente.";
+    var d = document.getElementById("com-date");
+    if (d) {
+      d.textContent = "Hoy es " + new Date().toLocaleDateString("es-ES", {
+        weekday: "long", day: "2-digit", month: "long", year: "numeric"
+      }) + ".";
+    }
+  }
+
+  // ── Estado ──
+  var currentView = "list";
+
+  function showDetail(postId) {
+    var post = posts.find(function(p) { return p.id === postId; });
+    if (!post) return;
+
+    document.getElementById("com-detail-title").textContent = post.title;
+    document.getElementById("com-detail-author").textContent = "Redactado por Pizza de Verdad";
+    document.getElementById("com-detail-body").innerHTML = post.body;
+    document.getElementById("com-breadcrumb").textContent = "Noticias de Verdad / " + post.title.substring(0, 25) + "...";
+
+    document.getElementById("com-list").classList.add("hidden");
+    var detail = document.getElementById("com-detail");
+    detail.classList.add("active");
+    currentView = "detail";
+  }
+
+  function showList() {
+    document.getElementById("com-detail").classList.remove("active");
+    document.getElementById("com-list").classList.remove("hidden");
+    document.getElementById("com-breadcrumb").textContent = "Noticias de Verdad";
+    currentView = "list";
+  }
+
+  // ── Post clicks ──
+  function initPosts() {
+    document.querySelectorAll(".com-post-card").forEach(function(card) {
+      var nb = card.cloneNode(true);
+      card.parentNode.replaceChild(nb, card);
+      nb.addEventListener("click", function() {
+        var id = parseInt(nb.getAttribute("data-post-id"));
+        showDetail(id);
+      });
+    });
+  }
+
+  // ── Back button ──
+  function initBack() {
+    var btn = document.getElementById("com-back-btn");
+    if (btn) {
+      var nb = btn.cloneNode(true);
+      btn.parentNode.replaceChild(nb, btn);
+      nb.addEventListener("click", function() {
+        showList();
+      });
+    }
+  }
+
+  // ── Search ──
+  function initSearch() {
+    var input = document.getElementById("com-search");
+    if (!input) return;
+    input.addEventListener("input", function() {
+      var q = input.value.toLowerCase();
+      document.querySelectorAll(".com-post-card").forEach(function(card) {
+        var title = card.querySelector(".com-post-title");
+        var snippet = card.querySelector(".com-post-snippet");
+        var text = (title ? title.textContent : "") + " " + (snippet ? snippet.textContent : "");
+        card.style.display = text.toLowerCase().indexOf(q) !== -1 ? "" : "none";
+      });
+    });
+  }
+
+  function init() {
+    updateHeader();
+    initPosts();
+    initBack();
+    initSearch();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+  document.addEventListener("astro:page-load", init);
+})();
+</script>
+
+<style>
+  /* Page-level overrides */
+  .com-page {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 20px 20px 12px 20px !important;
+    gap: 16px !important;
+    overflow: hidden;
+    height: calc(100vh - 36px);
+    box-sizing: border-box;
+  }
+
+  .com-top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .com-top-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .breadcrumb-icon {
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
+  }
+
+  .breadcrumb-text {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .breadcrumb-current {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  .greeting {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .current-date {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .com-user-pill {
+    background-color: var(--color-user-pill);
+    color: white;
+    padding: 8px 8px 8px 18px;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+
+
+
+
+  @media (max-width: 768px) {
+    .com-page {
+      padding: 16px 12px 88px !important;
+      overflow-y: auto;
+      height: auto;
+    }
+
+    .com-top-header {
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .com-top-left { align-items: center; }
+    .com-user-pill { display: none; }
+    .breadcrumb { display: none; }
+
+    .greeting {
+      font-size: 1.4rem;
+      text-align: center;
+    }
+  }
+</style>

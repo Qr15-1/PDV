@@ -1,0 +1,452 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Sidebar from "../components/Sidebar.astro";
+import MobileHeader from "../components/MobileHeader.astro";
+import "../styles/biblioteca.css";
+import { getCategoriasMenu, getAllManuales } from "../services/bibliotecaService.js";
+
+// Datos del servidor (compilados en el HTML)
+const categorias = await getCategoriasMenu();
+const manuales   = await getAllManuales();
+
+// Serializar para el cliente
+const menuJSON    = JSON.stringify(categorias);
+const manualesJSON = JSON.stringify(manuales);
+---
+
+<Layout>
+  <div class="app-container">
+    <Sidebar />
+
+    <div class="mobile-layout">
+      <MobileHeader />
+
+      <main
+        class="dashboard-panel bib-page"
+        data-bib-menu={menuJSON}
+        data-bib-manuales={manualesJSON}
+      >
+
+        <!-- Header -->
+        <header class="bib-top-header">
+          <div class="bib-top-left">
+            <nav class="breadcrumb">
+              <img src="/icons/LIBRARY.png" class="breadcrumb-icon" alt="" />
+              <span class="breadcrumb-text">Librería / <span class="breadcrumb-current" id="bib-breadcrumb">Biblioteca</span></span>
+            </nav>
+            <h1 class="greeting" id="bib-greeting">Cargando...</h1>
+            <p class="current-date" id="bib-date">Cargando fecha...</p>
+          </div>
+          <div class="header-actions">
+            <div class="user-pill bib-user-pill">
+              <span class="username">username</span>
+              <div class="user-avatar"></div>
+            </div>
+            <button class="logout-btn" id="bib-logout-btn" title="Cerrar sesión">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Cerrar sesión
+            </button>
+          </div>
+        </header>
+
+        <!-- Mobile nav -->
+        <div class="bib-mobile-nav">
+          <div class="bib-mobile-dropdown-wrap">
+            <button class="bib-mobile-dropdown" id="bib-mob-dropdown">
+              <img src="/icons/RESUMEN.png" class="bib-mob-dd-icon" alt="" />
+              <span id="bib-mob-dd-text">Categoría</span>
+              <span class="bib-mob-dd-arrow">▼</span>
+            </button>
+            <div class="bib-mobile-dropdown-menu" id="bib-mob-menu"></div>
+          </div>
+          <div class="bib-mobile-roles" id="bib-mob-roles"></div>
+        </div>
+
+        <div class="bib-layout">
+
+          <!-- Sidebar -->
+          <div class="bib-sidebar">
+            <div class="bib-categories" id="bib-categories"></div>
+            <div class="bib-accordion" id="bib-accordion"></div>
+          </div>
+
+          <!-- Reader -->
+          <div class="bib-reader" id="bib-reader">
+            <div class="bib-doc-header" id="bib-doc-header">
+              <div>
+                <h1 class="bib-doc-title" id="bib-doc-title">Biblioteca</h1>
+                <p class="bib-doc-author" id="bib-doc-author">Pizza de Verdad</p>
+              </div>
+              <button class="bib-print-btn" id="bib-print-btn" title="Imprimir">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 6 2 18 2 18 9" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /><rect x="6" y="14" width="12" height="8" />
+                </svg>
+              </button>
+            </div>
+            <div class="bib-doc-content" id="bib-doc-content">
+              <div class="bib-reader-placeholder">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>
+                <p>Selecciona un manual para comenzar la lectura</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+(function() {
+
+  // ── Estado global ──
+  var menuData    = [];
+  var manualesDB  = {};
+  var activeCat   = "";
+
+  // ── Greeting & Date ──
+  function updateHeader() {
+    var hora = new Date().getHours();
+    var saludo = "Buenas noches";
+    if (hora >= 5  && hora < 12) saludo = "Buenos días";
+    else if (hora >= 12 && hora < 19) saludo = "Buenas tardes";
+    var g = document.getElementById("bib-greeting");
+    if (g) g.textContent = saludo + ", gerente.";
+    var d = document.getElementById("bib-date");
+    if (d) d.textContent = "Hoy es " + new Date().toLocaleDateString("es-ES", {
+      weekday: "long", day: "2-digit", month: "long", year: "numeric"
+    }) + ".";
+  }
+
+  // ── Parsear datos del servidor ──
+  function parseData() {
+    var el = document.querySelector(".bib-page");
+    if (!el) return;
+    try { menuData   = JSON.parse(el.getAttribute("data-bib-menu")     || "[]"); } catch(e) { menuData = []; }
+    try { manualesDB = JSON.parse(el.getAttribute("data-bib-manuales") || "{}"); } catch(e) { manualesDB = {}; }
+  }
+
+  // ── Renderizar categorías ──
+  function renderCategories() {
+    var container = document.getElementById("bib-categories");
+    if (!container) return;
+    var mobileMenu = document.getElementById("bib-mob-menu");
+
+    var html = "";
+    var mobileHtml = "";
+    menuData.forEach(function(cat, i) {
+      var isActive = i === 0 ? " active" : "";
+      html += '<button class="bib-cat-btn' + isActive + '" data-cat="' + cat.slug + '">';
+      html += '<img src="/icons/' + cat.icono + '.png" class="bib-cat-icon" alt="" />';
+      html += cat.nombre;
+      html += '<span class="bib-cat-arrow">▼</span>';
+      html += '</button>';
+
+      mobileHtml += '<button class="bib-mob-opt' + isActive + '" data-cat="' + cat.slug + '">' + cat.nombre + '</button>';
+    });
+
+    container.innerHTML = html;
+    if (mobileMenu) mobileMenu.innerHTML = mobileHtml;
+
+    // Eventos categorías desktop
+    container.querySelectorAll(".bib-cat-btn").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        container.querySelectorAll(".bib-cat-btn").forEach(function(b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        var breadcrumb = document.getElementById("bib-breadcrumb");
+        if (breadcrumb) breadcrumb.textContent = btn.textContent.replace("▼","").trim();
+        renderAccordion(btn.getAttribute("data-cat"));
+      });
+    });
+
+    // Eventos categorías mobile
+    if (mobileMenu) {
+      mobileMenu.querySelectorAll(".bib-mob-opt").forEach(function(opt) {
+        opt.addEventListener("click", function() {
+          mobileMenu.querySelectorAll(".bib-mob-opt").forEach(function(o) { o.classList.remove("active"); });
+          opt.classList.add("active");
+          var txt = document.getElementById("bib-mob-dd-text");
+          if (txt) txt.textContent = opt.textContent;
+          mobileMenu.classList.remove("open");
+          container.querySelectorAll(".bib-cat-btn").forEach(function(b) { b.classList.remove("active"); });
+          var match = container.querySelector('.bib-cat-btn[data-cat="' + opt.getAttribute("data-cat") + '"]');
+          if (match) match.classList.add("active");
+          renderAccordion(opt.getAttribute("data-cat"));
+        });
+      });
+    }
+  }
+
+  // ── Renderizar acordeón de una categoría ──
+  function renderAccordion(catSlug) {
+    activeCat = catSlug;
+    var accordion  = document.getElementById("bib-accordion");
+    var mobileRoles = document.getElementById("bib-mob-roles");
+    if (!accordion) return;
+
+    var cat = menuData.find(function(c) { return c.slug === catSlug; });
+    if (!cat || !cat.roles || !cat.roles.length) {
+      accordion.innerHTML = '<p style="font-size:0.82rem;color:var(--text-muted);padding:12px 14px;font-style:italic;">Sin roles disponibles</p>';
+      if (mobileRoles) mobileRoles.innerHTML = "";
+      return;
+    }
+
+    var html = "";
+    var mobileHtml = "";
+    cat.roles.forEach(function(role, ri) {
+      var openClass = ri === 0 ? " open" : "";
+      html += '<button class="bib-role-header' + openClass + '" data-role="' + role.slug + '">';
+      html += role.nombre + ' <span class="bib-role-arrow">▼</span>';
+      html += '</button>';
+      html += '<div class="bib-role-items' + openClass + '" data-role-items="' + role.slug + '">';
+      if (role.temas && role.temas.length) {
+        role.temas.forEach(function(tema) {
+          html += '<button class="bib-topic-btn" data-slug="' + tema.slug + '">';
+          html += '<span class="bib-topic-dot"></span>' + tema.titulo;
+          html += '</button>';
+        });
+      }
+      html += '</div>';
+
+      mobileHtml += '<button class="bib-mob-role' + (ri === 0 ? ' active' : '') + '" data-role="' + role.slug + '">' + role.nombre + '</button>';
+    });
+
+    accordion.innerHTML = html;
+    if (mobileRoles) mobileRoles.innerHTML = mobileHtml;
+
+    bindAccordionEvents();
+    bindTopicEvents();
+    bindMobileRoleEvents();
+  }
+
+  // ── Acordeón toggle ──
+  function bindAccordionEvents() {
+    document.querySelectorAll(".bib-role-header").forEach(function(header) {
+      header.addEventListener("click", function(e) {
+        e.preventDefault(); e.stopPropagation();
+        var role  = header.getAttribute("data-role");
+        var items = document.querySelector('[data-role-items="' + role + '"]');
+        header.classList.toggle("open");
+        if (items) items.classList.toggle("open");
+      });
+    });
+  }
+
+  // ── Click en tema , cargar manual ──
+  function bindTopicEvents() {
+    document.querySelectorAll(".bib-topic-btn").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        // Marcar activo
+        document.querySelectorAll(".bib-topic-btn").forEach(function(b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+
+        var slug = btn.getAttribute("data-slug");
+        loadManual(slug);
+      });
+    });
+  }
+
+  // ── Cargar contenido del manual en el reader ──
+  function loadManual(slug) {
+    var manual = manualesDB[slug];
+    var title   = document.getElementById("bib-doc-title");
+    var author  = document.getElementById("bib-doc-author");
+    var content = document.getElementById("bib-doc-content");
+
+    if (!manual) {
+      if (title)   title.textContent   = "Manual no disponible";
+      if (author)  author.textContent  = "Pizza de Verdad";
+      if (content) content.innerHTML   = '<div class="bib-reader-placeholder"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><p>Este manual aún no está disponible</p></div>';
+      return;
+    }
+
+    if (title)   title.textContent  = manual.titulo  || "Sin título";
+    if (author)  author.textContent = "Redactado por " + (manual.autor || "Pizza de Verdad");
+    if (content) {
+      if (manual.contenido_html) {
+        content.innerHTML = manual.contenido_html;
+      } else {
+        content.innerHTML = '<div class="bib-reader-placeholder"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><p>Contenido no disponible aún</p></div>';
+      }
+    }
+
+    // Scroll to top of reader
+    var reader = document.getElementById("bib-reader");
+    if (reader) reader.scrollTop = 0;
+  }
+
+  // ── Mobile role strip ──
+  function bindMobileRoleEvents() {
+    document.querySelectorAll(".bib-mob-role").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        document.querySelectorAll(".bib-mob-role").forEach(function(b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        var role = btn.getAttribute("data-role");
+        document.querySelectorAll(".bib-role-header").forEach(function(h) { h.classList.remove("open"); });
+        document.querySelectorAll(".bib-role-items").forEach(function(i) { i.classList.remove("open"); });
+        var header = document.querySelector('.bib-role-header[data-role="' + role + '"]');
+        var items  = document.querySelector('[data-role-items="' + role + '"]');
+        if (header) header.classList.add("open");
+        if (items)  items.classList.add("open");
+      });
+    });
+  }
+
+  // ── Mobile dropdown toggle ──
+  function initMobileDropdown() {
+    var toggle = document.getElementById("bib-mob-dropdown");
+    var menu   = document.getElementById("bib-mob-menu");
+    if (!toggle || !menu) return;
+    var nt = toggle.cloneNode(true);
+    toggle.parentNode.replaceChild(nt, toggle);
+    nt.addEventListener("click", function(e) {
+      e.stopPropagation();
+      menu.classList.toggle("open");
+    });
+    document.addEventListener("click", function() { menu.classList.remove("open"); });
+  }
+
+  // ── Print ──
+  function initPrint() {
+    var btn = document.getElementById("bib-print-btn");
+    if (!btn) return;
+    var nb = btn.cloneNode(true);
+    btn.parentNode.replaceChild(nb, btn);
+    nb.addEventListener("click", function() { window.print(); });
+  }
+
+  // ── Init ──
+  function init() {
+    parseData();
+    updateHeader();
+    renderCategories();
+    initMobileDropdown();
+    initPrint();
+
+    // Render first category
+    if (menuData.length > 0) {
+      var firstCat = menuData[0];
+      var breadcrumb = document.getElementById("bib-breadcrumb");
+      if (breadcrumb) breadcrumb.textContent = firstCat.nombre;
+      var ddText = document.getElementById("bib-mob-dd-text");
+      if (ddText) ddText.textContent = firstCat.nombre;
+      renderAccordion(firstCat.slug);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+  document.addEventListener("astro:page-load", init);
+})();
+</script>
+
+<style>
+  .bib-page {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 20px 20px 12px 20px !important;
+    gap: 16px !important;
+    overflow: hidden;
+    height: calc(100vh - 36px);
+    box-sizing: border-box;
+  }
+
+  .bib-top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .bib-top-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .breadcrumb-icon { width: 18px; height: 18px; opacity: 0.7; }
+
+  .breadcrumb-text {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .breadcrumb-current {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  .greeting {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .current-date {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .bib-user-pill {
+    background-color: var(--color-user-pill);
+    color: white;
+    padding: 8px 8px 8px 18px;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+
+  .bib-layout {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .bib-reader-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 64px 16px;
+    color: var(--text-muted);
+    text-align: center;
+    min-height: 200px;
+  }
+
+  .bib-reader-placeholder p {
+    font-size: 0.92rem;
+    font-style: italic;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .bib-page {
+      padding: 16px 12px 88px !important;
+      overflow-y: auto;
+    }
+    .bib-top-header { flex-direction: column; align-items: center; gap: 4px; }
+    .bib-top-left { align-items: center; }
+    .bib-user-pill { display: none; }
+    .breadcrumb { display: none; }
+    .greeting { font-size: 1.4rem; text-align: center; }
+  }
+</style>

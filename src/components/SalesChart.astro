@@ -1,0 +1,158 @@
+---
+// src/components/SalesChart.astro
+
+interface Props {
+  ventas?: { mes: string; monto: number | null }[];
+}
+
+const { ventas = [] } = Astro.props;
+
+// Serializar datos para pasarlos al script del cliente
+const chartDataJSON = JSON.stringify(ventas);
+const hasData = ventas.length > 0 && ventas.some(v => v.monto != null && v.monto > 0);
+---
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<div class="sales-chart-card" data-chart-ventas={chartDataJSON}>
+  {hasData ? (
+    <>
+      <div class="chart-tooltip" id="chart-tooltip">
+        <p class="tooltip-period"></p>
+        <p class="tooltip-value"></p>
+      </div>
+      <div class="chart-wrapper">
+        <canvas id="salesCanvas"></canvas>
+      </div>
+    </>
+  ) : (
+    <div class="chart-empty-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+      <p>Sin datos de ventas este año</p>
+    </div>
+  )}
+</div>
+
+<style>
+  .chart-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 48px 16px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-style: italic;
+    min-height: 200px;
+  }
+</style>
+
+<script is:inline>
+  var MESES_COMPLETOS = {
+    "ENE": "Enero", "FEB": "Febrero", "MAR": "Marzo", "ABR": "Abril",
+    "MAY": "Mayo", "JUN": "Junio", "JUL": "Julio", "AGO": "Agosto",
+    "SEP": "Septiembre", "OCT": "Octubre", "NOV": "Noviembre", "DIC": "Diciembre"
+  };
+
+  var salesChartInstance = null;
+
+  function buildSalesChart() {
+    if (typeof Chart === "undefined") {
+      setTimeout(buildSalesChart, 100);
+      return;
+    }
+
+    var container = document.querySelector(".sales-chart-card");
+    if (!container) return;
+
+    var rawJSON = container.getAttribute("data-chart-ventas");
+    if (!rawJSON) return;
+
+    var ventas;
+    try { ventas = JSON.parse(rawJSON); } catch(e) { return; }
+
+    if (!ventas.length || !ventas.some(function(v) { return v.monto != null && v.monto > 0; })) return;
+
+    var canvas = document.getElementById("salesCanvas");
+    if (!canvas) return;
+    var ctx = canvas.getContext("2d");
+
+    var labels = ventas.map(function(v) { return v.mes; });
+    var data = ventas.map(function(v) { return v.monto != null ? v.monto : 0; });
+
+    var chartColor = getComputedStyle(document.documentElement)
+      .getPropertyValue("--color-chart-accent").trim() || "#D4A017";
+
+    var gradient = ctx.createLinearGradient(0, 0, 0, 260);
+    gradient.addColorStop(0, chartColor + "59");
+    gradient.addColorStop(1, chartColor + "05");
+
+    if (salesChartInstance) { salesChartInstance.destroy(); salesChartInstance = null; }
+
+    var tooltip = document.getElementById("chart-tooltip");
+    var currentYear = new Date().getFullYear();
+
+    salesChartInstance = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          borderColor: chartColor,
+          borderWidth: 2.5,
+          backgroundColor: gradient,
+          fill: true,
+          tension: 0.45,
+          pointRadius: 5,
+          pointBackgroundColor: chartColor,
+          pointBorderColor: "#fff",
+          pointBorderWidth: 2,
+          pointHoverRadius: 7,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            enabled: false,
+            external: function(context) {
+              if (!tooltip) return;
+              var tip = context.tooltip;
+              if (tip.opacity === 0) { tooltip.style.opacity = "0"; return; }
+              var idx = tip.dataPoints && tip.dataPoints[0] ? tip.dataPoints[0].dataIndex : 0;
+              var mesAbr = labels[idx] || "";
+              var mesCompleto = MESES_COMPLETOS[mesAbr] || mesAbr;
+              var monto = data[idx] || 0;
+              tooltip.querySelector(".tooltip-period").textContent = mesCompleto + ", " + currentYear;
+              tooltip.querySelector(".tooltip-value").textContent = "● $" + monto.toLocaleString("es-VE");
+              tooltip.style.opacity = "1";
+              tooltip.style.left = tip.caretX + "px";
+              tooltip.style.top = (tip.caretY - 65) + "px";
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            border: { display: false },
+            ticks: { color: "#999", font: { size: 11, family: "Inter" } }
+          },
+          y: { display: false, grid: { display: false } }
+        },
+        interaction: { mode: "nearest", axis: "x", intersect: false }
+      }
+    });
+  }
+
+  document.addEventListener("astro:page-load", buildSalesChart);
+  if (document.readyState !== "loading") {
+    buildSalesChart();
+  } else {
+    document.addEventListener("DOMContentLoaded", buildSalesChart);
+  }
+</script>

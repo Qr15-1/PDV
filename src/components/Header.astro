@@ -1,0 +1,73 @@
+---
+// src/components/Header.astro
+
+const currentPage = Astro.url.pathname;
+
+// Mapa de rutas → nombre de página
+const pageNames: Record<string, string> = {
+  "/": "Resumen",
+  "/biblioteca": "Biblioteca",
+  "/marketing": "Marketing",
+  "/comunidad": "Comunidad",
+  "/soporte": "Soporte",
+};
+
+const pageName = pageNames[currentPage] ?? "Resumen";
+---
+
+<header class="dashboard-header">
+  <!-- Lado izquierdo: Breadcrumb + Saludo + Fecha -->
+  <div class="header-left">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <img src="/icons/RESUMEN.png" alt="Página" class="breadcrumb-icon" />
+      <span class="breadcrumb-text">
+        Dashboard / <span class="breadcrumb-current">{pageName}</span>
+      </span>
+    </div>
+
+    <!-- Saludo dinámico -->
+    <h1 class="greeting" id="greeting-text">Cargando...</h1>
+
+    <!-- Fecha dinámica -->
+    <p class="date-text" id="date-text">Cargando fecha...</p>
+  </div>
+
+  <!-- Lado derecho: Cápsula de usuario -->
+  <div class="header-right">
+    <div class="user-capsule">
+      <span class="username">%username%</span>
+      <div class="avatar-circle">
+        <div class="avatar-dot"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  function actualizarHeader() {
+    const hora = new Date().getHours();
+    let saludo = "Buenas noches";
+    if (hora >= 5 && hora < 12) saludo = "Buenos días";
+    else if (hora >= 12 && hora < 19) saludo = "Buenas tardes";
+
+    const greetingEl = document.getElementById("greeting-text");
+    if (greetingEl) greetingEl.textContent = `${saludo}, gerente.`;
+
+    const dateEl = document.getElementById("date-text");
+    if (dateEl) {
+      const hoy = new Date();
+      const opciones: Intl.DateTimeFormatOptions = {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      };
+      const fechaFormateada = hoy.toLocaleDateString("es-ES", opciones);
+      dateEl.textContent = `Hoy es ${fechaFormateada}.`;
+    }
+  }
+
+  // Ejecutar en cada carga de página (incluyendo View Transitions)
+  document.addEventListener("astro:page-load", actualizarHeader);
+</script>

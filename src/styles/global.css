@@ -1,0 +1,188 @@
+/* src/styles/global.css */
+
+:root {
+  /* Fondos */
+  --color-bg-red: #D11A1A;
+  --color-panel-cream: #FFF8F1;
+
+  /* Alias (compatibilidad con componentes existentes) */
+  --color-primary: #D11A1A;
+  --color-secondary: #FFF8F1;
+  --color-bg-dark: #1A1A1A;
+
+  /* Textos */
+  --text-main: #1A1A1A;
+  --text-dark: #1A1A1A;
+  --text-light: #FFFFFF;
+  --text-muted: #666666;
+
+  /* Elementos */
+  --color-chart-accent: #D4A017;
+  --color-user-pill: #1C1C1C;
+  --white: #FFFFFF;
+
+  /* Bordes */
+  --radius-panel: 20px;
+  --radius-card: 20px;
+
+  /* Alias (compatibilidad) */
+  --border-radius-lg: 48px;
+  --border-radius-md: 20px;
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-bg-red);
+  background-image: url('/BACKGROUND.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Contenedor general ── */
+.app-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background-color: transparent;
+  padding: 18px;
+  box-sizing: border-box;
+  gap: 12px;
+}
+
+/* ── Wrapper móvil (transparente en desktop para que el flex funcione) ── */
+.mobile-layout {
+  display: contents;
+}
+
+@media (max-width: 768px) {
+  .mobile-layout {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
+}
+
+/* ── Panel crema principal ── */
+.dashboard-panel {
+  flex: 1;
+  background-color: var(--color-panel-cream);
+  border-radius: var(--radius-panel);
+  padding: 40px 50px;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+/* Scrollbar invisible */
+.dashboard-panel::-webkit-scrollbar {
+  width: 0;
+}
+
+/* Grids de sección */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 16px;
+  flex: 1;
+}
+
+/* Alias (compatibilidad con código anterior) */
+.dashboard-layout {
+  display: contents;
+}
+
+.dashboard-main {
+  display: contents;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ── Ocultar avatar (círculo blanco) ── */
+.user-avatar {
+  display: none !important;
+}
+
+/* ── Top-right header actions (user pill + logout) ── */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.right-col-header {
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background-color: transparent;
+  color: var(--text-main);
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  box-shadow: none;
+  transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 36px;
+  text-decoration: none;
+}
+
+.logout-btn:hover {
+  max-width: 200px;
+  padding: 6px 16px 6px 8px;
+  background-color: rgba(209, 26, 26, 0.1);
+  color: var(--color-primary);
+}
+
+.logout-btn svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* ── En móvil ocultar el logout del header de escritorio ── */
+@media (max-width: 768px) {
+  .logout-btn {
+    display: none !important;
+  }
+
+  .header-actions {
+    display: none !important;
+  }
+}

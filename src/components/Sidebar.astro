@@ -1,0 +1,68 @@
+---
+// src/components/Sidebar.astro
+import "../styles/barra-lateral.css";
+
+const currentPath = Astro.url.pathname;
+
+const menuItems = [
+  { name: "Resumen", icon: "RESUMEN", href: "/" },
+  { name: "Biblioteca", icon: "LIBRARY", href: "/biblioteca" },
+  { name: "Marketing", icon: "MARKETING", href: "/marketing" },
+  { name: "Comunidad", icon: "COMMUNYTI", href: "/comunidad" },
+].map((item) => ({
+  ...item,
+  active: currentPath === item.href,
+}));
+---
+
+<aside class="sidebar" transition:persist>
+  <!-- Fondo de ondas (Imagen de Figma) -->
+  <div class="waves-bg"></div>
+
+  <!-- Logo Superior (iconos reales en /icons) -->
+  <div class="logo-container">
+    <img src="/icons/BETO.png" alt="Logo Pizza de Verdad" class="logo" />
+  </div>
+
+  <!-- Menú de Navegación -->
+  <nav class="menu">
+    {menuItems.map((item) => (
+      <a href={item.href} class={`menu-item ${item.active ? "active" : ""}`}>
+        <div class="icon-pill">
+          <!-- Iconos del menú (carpeta public/icons) -->
+          <img src={`/icons/${item.icon}.png`} alt={item.name} class="menu-icon" />
+        </div>
+        <span class="menu-text">{item.name}</span>
+      </a>
+    ))}
+  </nav>
+
+  <!-- Sección Inferior -->
+  <div class="footer-menu">
+    <div class="separator"></div>
+    <a href="/soporte" class="menu-item footer-item">
+      <div class="icon-pill">
+        <img src="/icons/SOPORTE.png" alt="Soporte" class="menu-icon" />
+      </div>
+      <span class="menu-text">Soporte</span>
+    </a>
+  </div>
+</aside>
+
+<!-- ── Barra inferior móvil ── -->
+<nav class="mobile-bottom-nav">
+  {menuItems.map((item) => (
+    <a href={item.href} class={`mobile-nav-item ${item.active ? "active" : ""}`}>
+      <div class="mobile-nav-icon-wrap">
+        <img src={`/icons/${item.icon}.png`} alt={item.name} class="mobile-nav-icon" />
+      </div>
+      <span class="mobile-nav-label">{item.name}</span>
+    </a>
+  ))}
+  <a href="/soporte" class="mobile-nav-item">
+    <div class="mobile-nav-icon-wrap">
+      <img src="/icons/SOPORTE.png" alt="Soporte" class="mobile-nav-icon" />
+    </div>
+    <span class="mobile-nav-label">Soporte</span>
+  </a>
+</nav>

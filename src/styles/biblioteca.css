@@ -1,0 +1,442 @@
+/* src/styles/biblioteca.css */
+
+/* ═══ Layout: sidebar interno + reader ═══ */
+.bib-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 14px;
+    height: 100%;
+    min-height: 0;
+}
+
+/* ═══ Sidebar de contenidos ═══ */
+.bib-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 20px;
+    overflow-y: auto;
+    background: transparent;
+}
+
+/* Scrollbar sutil */
+.bib-sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.bib-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.bib-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+}
+
+/* ── Categorías ── */
+.bib-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.bib-cat-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 10px;
+    background: #ece5d8;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-main);
+    transition: background 0.15s, color 0.15s;
+}
+
+.bib-cat-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.bib-cat-btn.active {
+    background: rgba(0, 0, 0, 0.06);
+    font-weight: 600;
+}
+
+.bib-cat-icon {
+    width: 22px;
+    height: 22px;
+    filter: brightness(0);
+}
+
+.bib-cat-arrow {
+    margin-left: auto;
+    font-size: 0.7rem;
+    opacity: 0.4;
+    transition: transform 0.2s;
+}
+
+.bib-cat-btn.active .bib-cat-arrow {
+    transform: rotate(180deg);
+}
+
+/* ── Acordeón de roles ── */
+.bib-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.bib-role-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 14px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-main);
+    transition: background 0.15s;
+}
+
+.bib-role-header:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.bib-role-arrow {
+    font-size: 0.65rem;
+    opacity: 0.4;
+    transition: transform 0.25s;
+}
+
+.bib-role-header.open .bib-role-arrow {
+    transform: rotate(180deg);
+}
+
+.bib-role-items {
+    display: none;
+    flex-direction: column;
+    padding: 2px 0 6px 16px;
+}
+
+.bib-role-items.open {
+    display: flex;
+}
+
+.bib-topic-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    text-align: left;
+    transition: color 0.15s, background 0.15s;
+}
+
+.bib-topic-btn:hover {
+    color: var(--text-main);
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.bib-topic-btn.active {
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.bib-topic-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: transparent;
+    flex-shrink: 0;
+}
+
+.bib-topic-btn.active .bib-topic-dot {
+    background: var(--color-primary);
+}
+
+/* ═══ Reader (visor de documentos) ═══ */
+.bib-reader {
+    display: flex;
+    flex-direction: column;
+    padding: 32px 20px 32px 36px;
+    overflow-y: auto;
+    background: #f5f0e8;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* Scrollbar reader */
+.bib-reader::-webkit-scrollbar {
+    width: 6px;
+}
+
+.bib-reader::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 12px 0;
+}
+
+.bib-reader::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+.bib-reader::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.28);
+}
+
+/* Header del doc */
+.bib-doc-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.bib-doc-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.bib-doc-author {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.bib-print-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+
+.bib-print-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.bib-print-btn svg {
+    width: 22px;
+    height: 22px;
+    color: var(--text-muted);
+}
+
+/* Contenido del documento */
+.bib-doc-content h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 28px 0 12px;
+    line-height: 1.3;
+}
+
+.bib-doc-content h2:first-child {
+    margin-top: 0;
+}
+
+.bib-doc-content p {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: #444;
+    margin: 0 0 14px;
+}
+
+/* Bloques destacados (cita/nota) */
+.bib-highlight {
+    border-left: 3px solid #D4A017;
+    padding: 12px 16px;
+    margin: 14px 0;
+    background: rgba(212, 160, 23, 0.05);
+    border-radius: 0 8px 8px 0;
+}
+
+.bib-highlight p {
+    margin: 0;
+    font-size: 0.86rem;
+    line-height: 1.65;
+    color: #555;
+}
+
+/*  Print Styles  */
+@media print {
+
+    .sidebar,
+    .mobile-bottom-nav,
+    .bib-sidebar,
+    .top-header-left,
+    .user-pill,
+    .bib-print-btn,
+    .bib-mobile-nav {
+        display: none !important;
+    }
+
+    .app-container {
+        padding: 0;
+    }
+
+    .bib-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .bib-reader {
+        padding: 20px;
+        border-radius: 0;
+    }
+}
+
+/*  Mobile  (hidden on desktop)  */
+.bib-mobile-nav {
+    display: none;
+}
+
+/*  Responsive móvil  */
+@media (max-width: 768px) {
+
+    /* Hide desktop sidebar */
+    .bib-sidebar {
+        display: none !important;
+    }
+
+    /* Show mobile nav */
+    .bib-mobile-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    /*  Dropdown categoría  */
+    .bib-mobile-dropdown-wrap {
+        position: relative;
+    }
+
+    .bib-mobile-dropdown {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 12px 16px;
+        border: 1.5px solid rgba(0, 0, 0, 0.12);
+        border-radius: 100px;
+        background: #fff;
+        cursor: pointer;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    .bib-mob-dd-icon {
+        width: 20px;
+        height: 20px;
+        filter: brightness(0);
+    }
+
+    .bib-mob-dd-arrow {
+        margin-left: auto;
+        font-size: 0.7rem;
+        opacity: 0.5;
+        transition: transform 0.2s;
+    }
+
+    .bib-mobile-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        z-index: 100;
+        overflow: hidden;
+    }
+
+    .bib-mobile-dropdown-menu.open {
+        display: block;
+    }
+
+    .bib-mob-opt {
+        display: block;
+        width: 100%;
+        padding: 12px 16px;
+        border: none;
+        background: transparent;
+        text-align: left;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.85rem;
+        color: var(--text-main);
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+
+    .bib-mob-opt:hover,
+    .bib-mob-opt.active {
+        background: rgba(0, 0, 0, 0.05);
+        font-weight: 600;
+    }
+
+    /* ── Roles horizontal strip ── */
+    .bib-mobile-roles {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        padding: 2px 0;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .bib-mobile-roles::-webkit-scrollbar {
+        display: none;
+    }
+
+    .bib-mob-role {
+        flex-shrink: 0;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 20px;
+        background: transparent;
+        cursor: pointer;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: #999;
+        white-space: nowrap;
+        transition: color 0.15s;
+    }
+
+    .bib-mob-role.active {
+        color: var(--text-main);
+        font-weight: 700;
+    }
+
+    /* ── Layout single column ── */
+    .bib-layout {
+        display: block !important;
+    }
+
+    .bib-reader {
+        padding: 20px 16px;
+        border-radius: 14px;
+    }
+}

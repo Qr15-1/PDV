@@ -1,0 +1,173 @@
+/* src/styles/dashboard-body.css */
+
+/* ── Grid principal: izquierda grande + derecha pequeña ── */
+.dashboard-body {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 16px;
+    flex: 1;
+    min-height: 0;
+}
+
+/* ── Columna izquierda: Gráfica ── */
+.sales-chart-card {
+    background: var(--color-panel-cream);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: var(--radius-card);
+    padding: 16px 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Tabs Semanal / Mensual / Anual */
+.chart-tabs {
+    display: none;
+}
+
+/* Canvas wrapper */
+.chart-wrapper {
+    flex: 1;
+    min-height: 0;
+    height: 280px;
+    position: relative;
+}
+
+/* ── Columna derecha: News + Soporte ── */
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Panel de Noticias */
+.news-panel {
+    background: var(--color-panel-cream);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: var(--radius-card);
+    padding: 16px;
+    flex: 1;
+    min-height: 270px;
+    overflow-y: auto;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.news-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+}
+
+.news-list {
+    display: flex;
+    flex-direction: column;
+    /* Línea separadora entre ítems */
+}
+
+.news-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.news-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.news-item:first-child {
+    padding-top: 0;
+}
+
+.news-icon {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+    filter: brightness(0) saturate(100%) invert(17%) sepia(99%) saturate(2200%) hue-rotate(347deg) brightness(103%);
+}
+
+.news-text {
+    font-size: 0.86rem;
+    color: var(--text-dark);
+    line-height: 1.4;
+}
+
+/* Tarjeta de Soporte */
+.support-card {
+    background: var(--color-primary);
+    border-radius: var(--border-radius-md);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    position: relative;
+    overflow: hidden;
+    min-height: 180px;
+}
+
+.support-icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.support-icon-img {
+    width: 22px;
+    height: 22px;
+}
+
+.support-question {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 400;
+}
+
+.support-cta {
+    font-size: 0.95rem;
+    color: #FFFFFF;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.support-button {
+    display: inline-block;
+    background: #FFFFFF;
+    color: var(--color-primary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 8px 20px;
+    border-radius: 999px;
+    text-decoration: none;
+    margin-top: 6px;
+    transition: opacity 0.2s;
+}
+
+.support-button:hover {
+    opacity: 0.9;
+}
+
+.support-mascot {
+    position: absolute;
+    bottom: -8px;
+    right: -4px;
+    opacity: 0.25;
+}
+
+.support-beto {
+    width: 70px;
+    height: auto;
+    filter: brightness(0) invert(1);
+}

@@ -1,0 +1,482 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Sidebar from "../components/Sidebar.astro";
+import MobileHeader from "../components/MobileHeader.astro";
+import "../styles/marketing.css";
+
+const currentPath = Astro.url.pathname;
+---
+
+<Layout>
+  <div class="app-container">
+    <Sidebar />
+
+    <div class="mobile-layout">
+      <MobileHeader />
+
+      <main class="dashboard-panel mkt-page">
+
+        <!-- Header -->
+        <header class="mkt-top-header">
+          <div class="mkt-top-left">
+            <nav class="breadcrumb">
+              <img src="/icons/MARKETING.png" class="breadcrumb-icon" alt="" />
+              <span class="breadcrumb-text">Recursos de Marketing / <span class="breadcrumb-current" id="mkt-breadcrumb">Historias</span></span>
+            </nav>
+            <h1 class="greeting" id="mkt-greeting">Cargando...</h1>
+            <p class="current-date" id="mkt-date">Cargando fecha...</p>
+          </div>
+          <div class="header-actions">
+            <div class="user-pill mkt-user-pill">
+              <span class="username">username</span>
+              <div class="user-avatar"></div>
+            </div>
+            <button class="logout-btn" id="mkt-logout-btn" title="Cerrar sesión">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Cerrar sesión
+            </button>
+          </div>
+        </header>
+
+        <!-- ═══ Mobile: Dropdown categoría ═══ -->
+        <div class="mkt-mobile-nav">
+          <div class="mkt-mobile-dropdown-wrap">
+            <button class="mkt-mobile-dropdown" id="mkt-mob-dropdown">
+              <img src="/icons/MARKETING.png" class="mkt-mob-dd-icon" alt="" />
+              <span id="mkt-mob-dd-text">Historias</span>
+              <span class="mkt-mob-dd-arrow">▼</span>
+            </button>
+            <div class="mkt-mobile-dropdown-menu" id="mkt-mob-menu">
+              <button class="mkt-mob-opt active" data-cat="historias">Historias</button>
+              <button class="mkt-mob-opt" data-cat="gradientes">Gradientes</button>
+              <button class="mkt-mob-opt" data-cat="ilustraciones">Ilustraciones</button>
+              <button class="mkt-mob-opt" data-cat="pngs">PNGs</button>
+              <button class="mkt-mob-opt" data-cat="plantillas">Plantillas</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contenido: sidebar + galería -->
+        <div class="mkt-layout">
+
+          <!-- ═══ Sidebar categorías ═══ -->
+          <div class="mkt-sidebar">
+            <p class="mkt-sidebar-desc">Descarga y utiliza este material aprobado en las historias de WhatsApp y redes sociales de tu tienda</p>
+
+            <button class="mkt-cat-btn active" data-cat="historias">
+              <svg viewBox="0 0 24 24" class="mkt-cat-icon" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+              Historias
+            </button>
+            <button class="mkt-cat-btn" data-cat="gradientes">
+              <svg viewBox="0 0 24 24" class="mkt-cat-icon" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+              Gradientes
+            </button>
+            <button class="mkt-cat-btn" data-cat="ilustraciones">
+              <svg viewBox="0 0 24 24" class="mkt-cat-icon" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+              Ilustraciones
+            </button>
+            <button class="mkt-cat-btn" data-cat="pngs">
+              <svg viewBox="0 0 24 24" class="mkt-cat-icon" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              PNGs
+            </button>
+            <button class="mkt-cat-btn" data-cat="plantillas">
+              <svg viewBox="0 0 24 24" class="mkt-cat-icon" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Plantillas
+            </button>
+
+            <button class="mkt-download-all" id="mkt-download-all">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Descargar todo el contenido
+            </button>
+          </div>
+
+          <!-- ═══ Galería (contenido inyectado por JS) ═══ -->
+          <div class="mkt-gallery" id="mkt-gallery">
+            <p style="color:var(--text-muted);font-size:0.85rem;font-style:italic;padding:24px;">Cargando recursos...</p>
+          </div>
+
+        </div><!-- /mkt-layout -->
+
+      </main>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+(function() {
+
+  // ══════════════════════════════════════════════════════
+  // DATOS POR CATEGORÍA
+  // (cuando WordPress esté listo, vendrán del servicio)
+  // ══════════════════════════════════════════════════════
+  var CATEGORIAS = {
+    historias: {
+      titulo:  "Historias para redes",
+      desc:    "Formato 1080×1920 (9:16) para Instagram, WhatsApp y TikTok.",
+      specs:   [{ icon: "phone", label: "9:16" }, { icon: "download", label: "1080×1920" }],
+      secciones: [
+        {
+          titulo: "Promociones",
+          items: [
+            { slug: "super-combo",    label: "SÚPER\nCOMBO",       estilo: "s1" },
+            { slug: "gran-combo",     label: "GRAN COMBO\nDE VERDAD", estilo: "s2" },
+            { slug: "promo-verdad",   label: "PROMO\nDE VERDAD",   estilo: "s3" },
+            { slug: "promo-charcut",  label: "PROMO\nCHARCUTERA",  estilo: "s4" },
+          ],
+        },
+      ],
+    },
+    gradientes: {
+      titulo:  "Fondos gradiente",
+      desc:    "Fondos con degradados de marca listos para usar como base en diseños.",
+      specs:   [{ icon: "image", label: "PNG" }, { icon: "download", label: "1080×1080" }],
+      secciones: [
+        {
+          titulo: "Paleta oficial",
+          items: [
+            { slug: "grad-rojo",    label: "ROJO\nPRINCIPAL",   estilo: "g1" },
+            { slug: "grad-crema",   label: "CREMA\nSUAVE",      estilo: "g2" },
+            { slug: "grad-oscuro",  label: "FONDO\nOSCURO",     estilo: "g3" },
+            { slug: "grad-dorado",  label: "DORADO\nACENTO",    estilo: "g4" },
+          ],
+        },
+      ],
+    },
+    ilustraciones: {
+      titulo:  "Ilustraciones de marca",
+      desc:    "Personajes e ilustraciones de Pizza de Verdad para campañas y piezas digitales.",
+      specs:   [{ icon: "image", label: "PNG / SVG" }, { icon: "download", label: "Alta resolución" }],
+      secciones: [
+        {
+          titulo: "Personajes",
+          items: [
+            { slug: "beto-chef",    label: "BETO\nCHEF",         estilo: "i1" },
+            { slug: "beto-delivery",label: "BETO\nDELIVERY",     estilo: "i2" },
+            { slug: "beto-saludo",  label: "BETO\nSALUDO",       estilo: "i3" },
+            { slug: "pizza-icon",   label: "PIZZA\nICONO",        estilo: "i4" },
+          ],
+        },
+      ],
+    },
+    pngs: {
+      titulo:  "PNGs descargables",
+      desc:    "Archivos PNG con fondo transparente para usar en cualquier diseño o presentación.",
+      specs:   [{ icon: "image", label: "PNG" }, { icon: "download", label: "Fondo transparente" }],
+      secciones: [
+        {
+          titulo: "Logos y emblemas",
+          items: [
+            { slug: "logo-full",    label: "LOGO\nCOMPLETO",    estilo: "p1" },
+            { slug: "logo-isotipo", label: "ISOTIPO\nBETO",     estilo: "p2" },
+            { slug: "logo-texto",   label: "LOGO\nTEXTO",       estilo: "p3" },
+            { slug: "sello-marca",  label: "SELLO\nDE MARCA",   estilo: "p4" },
+          ],
+        },
+      ],
+    },
+    plantillas: {
+      titulo:  "Plantillas editables",
+      desc:    "Plantillas para Canva y Adobe Express con la identidad visual de Pizza de Verdad.",
+      specs:   [{ icon: "layout", label: "Canva" }, { icon: "download", label: "Editable" }],
+      secciones: [
+        {
+          titulo: "Redes sociales",
+          items: [
+            { slug: "plant-post",     label: "POST\nCUADRADO",   estilo: "t1" },
+            { slug: "plant-historia", label: "HISTORIA\n9:16",   estilo: "t2" },
+            { slug: "plant-banner",   label: "BANNER\nWEB",      estilo: "t3" },
+            { slug: "plant-flyer",    label: "FLYER\nA4",        estilo: "t4" },
+          ],
+        },
+      ],
+    },
+  };
+
+  // SVG icons helper
+  var ICONS = {
+    phone:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>',
+    download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+    image:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>',
+    layout:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="18" height="7"/></svg>',
+  };
+
+  // ── Greeting & Date ──
+  function updateHeader() {
+    var hora = new Date().getHours();
+    var saludo = "Buenas noches";
+    if (hora >= 5 && hora < 12) saludo = "Buenos días";
+    else if (hora >= 12 && hora < 19) saludo = "Buenas tardes";
+    var g = document.getElementById("mkt-greeting");
+    if (g) g.textContent = saludo + ", gerente.";
+    var d = document.getElementById("mkt-date");
+    if (d) d.textContent = "Hoy es " + new Date().toLocaleDateString("es-ES", {
+      weekday: "long", day: "2-digit", month: "long", year: "numeric"
+    }) + ".";
+  }
+
+  // ── Renderizar galería ──
+  function renderGallery(catSlug) {
+    var cat   = CATEGORIAS[catSlug];
+    var gallery = document.getElementById("mkt-gallery");
+    if (!gallery || !cat) return;
+
+    // Actualizar breadcrumb
+    var bc = document.getElementById("mkt-breadcrumb");
+    if (bc) bc.textContent = cat.titulo;
+
+    // Construir HTML de la galería
+    var html = '<h2 class="mkt-gallery-title">' + cat.titulo + '</h2>';
+    html += '<p class="mkt-gallery-desc">' + cat.desc + '</p>';
+
+    cat.secciones.forEach(function(sec) {
+      html += '<h3 class="mkt-section-title">' + sec.titulo + '</h3>';
+      html += '<div class="mkt-stories-row">';
+
+      sec.items.forEach(function(item) {
+        var labelHtml = item.label.replace("\n", "<br/>");
+        html += '<div class="mkt-story-card">';
+        html += '<div class="mkt-story-placeholder ' + item.estilo + '">';
+        html += '<span>' + labelHtml + '</span>';
+        html += '</div>';
+        html += '<div class="mkt-story-actions">';
+        // Copiar
+        html += '<button class="mkt-action-btn" data-action="copy" data-slug="' + item.slug + '" title="Copiar enlace">';
+        html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+        html += '</button>';
+        // Descargar
+        html += '<button class="mkt-action-btn" data-action="download" data-slug="' + item.slug + '" title="Descargar">';
+        html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
+        html += '</button>';
+        html += '</div>';
+        html += '</div>';
+      });
+
+      // Cargar más
+      html += '<button class="mkt-load-more" data-cat="' + catSlug + '">';
+      html += '<div class="mkt-load-more-circle">+</div>';
+      html += '<span class="mkt-load-more-text">Cargar otros<br/>5 más</span>';
+      html += '</button>';
+
+      html += '</div>';
+    });
+
+    // Specs del formato
+    html += '<div class="mkt-format-specs">';
+    cat.specs.forEach(function(spec) {
+      html += '<span class="mkt-spec-badge">';
+      html += ICONS[spec.icon] || "";
+      html += spec.label;
+      html += '</span>';
+    });
+    html += '</div>';
+
+    gallery.innerHTML = html;
+
+    // Eventos de acción de tarjetas
+    gallery.querySelectorAll(".mkt-action-btn").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var action = btn.getAttribute("data-action");
+        var slug   = btn.getAttribute("data-slug");
+        if (action === "copy") {
+          // Preparado para URL real de WordPress
+          var url = window.location.origin + "/marketing/recursos/" + slug;
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(url).catch(function() {});
+          }
+          btn.title = "¡Enlace copiado!";
+          setTimeout(function() { btn.title = "Copiar enlace"; }, 2000);
+        } else if (action === "download") {
+          // Preparado para URL real de WordPress
+          console.log("[marketing] Descarga pendiente:", slug);
+          btn.title = "Descarga disponible próximamente";
+          setTimeout(function() { btn.title = "Descargar"; }, 2000);
+        }
+      });
+    });
+
+    // Load more
+    gallery.querySelectorAll(".mkt-load-more").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        console.log("[marketing] Cargar más:", btn.getAttribute("data-cat"));
+      });
+    });
+  }
+
+  // ── Category buttons ──
+  function initCategories() {
+    document.querySelectorAll(".mkt-cat-btn").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        document.querySelectorAll(".mkt-cat-btn").forEach(function(b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        renderGallery(btn.getAttribute("data-cat"));
+        // Sync mobile dropdown
+        var txt = document.getElementById("mkt-mob-dd-text");
+        if (txt) txt.textContent = btn.textContent.trim();
+        document.querySelectorAll(".mkt-mob-opt").forEach(function(o) { o.classList.remove("active"); });
+        var mobMatch = document.querySelector('.mkt-mob-opt[data-cat="' + btn.getAttribute("data-cat") + '"]');
+        if (mobMatch) mobMatch.classList.add("active");
+      });
+    });
+  }
+
+  // ── Mobile dropdown ──
+  function initMobileDropdown() {
+    var toggle = document.getElementById("mkt-mob-dropdown");
+    var menu   = document.getElementById("mkt-mob-menu");
+    if (!toggle || !menu) return;
+    var nt = toggle.cloneNode(true);
+    toggle.parentNode.replaceChild(nt, toggle);
+    nt.addEventListener("click", function(e) {
+      e.stopPropagation();
+      menu.classList.toggle("open");
+    });
+    document.addEventListener("click", function() { menu.classList.remove("open"); });
+    menu.querySelectorAll(".mkt-mob-opt").forEach(function(opt) {
+      opt.addEventListener("click", function() {
+        menu.querySelectorAll(".mkt-mob-opt").forEach(function(o) { o.classList.remove("active"); });
+        opt.classList.add("active");
+        var txt = document.getElementById("mkt-mob-dd-text");
+        if (txt) txt.textContent = opt.textContent;
+        menu.classList.remove("open");
+        var cat = opt.getAttribute("data-cat");
+        document.querySelectorAll(".mkt-cat-btn").forEach(function(b) { b.classList.remove("active"); });
+        var match = document.querySelector('.mkt-cat-btn[data-cat="' + cat + '"]');
+        if (match) match.classList.add("active");
+        renderGallery(cat);
+      });
+    });
+  }
+
+  // ── Download all ──
+  function initDownloadAll() {
+    var btn = document.getElementById("mkt-download-all");
+    if (!btn) return;
+    var nb = btn.cloneNode(true);
+    btn.parentNode.replaceChild(nb, btn);
+    nb.addEventListener("click", function() {
+      console.log("[marketing] Descargar todo — pendiente de integración WordPress");
+    });
+  }
+
+  function init() {
+    updateHeader();
+    initCategories();
+    initMobileDropdown();
+    initDownloadAll();
+    // Render primera categoría
+    renderGallery("historias");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+  document.addEventListener("astro:page-load", init);
+})();
+</script>
+
+<style>
+  /* Page-level overrides */
+  .mkt-page {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 20px 20px 12px 20px !important;
+    gap: 16px !important;
+    overflow: hidden;
+    height: calc(100vh - 36px);
+    box-sizing: border-box;
+  }
+
+  .mkt-top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .mkt-top-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .breadcrumb-icon {
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
+  }
+
+  .breadcrumb-text {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .breadcrumb-current {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  .greeting {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .current-date {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .mkt-user-pill {
+    background-color: var(--color-user-pill);
+    color: white;
+    padding: 8px 8px 8px 18px;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+
+
+
+
+  .mkt-layout {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  @media (max-width: 768px) {
+    .mkt-page {
+      padding: 16px 12px 88px !important;
+      overflow-y: auto;
+      height: auto;
+    }
+
+    .mkt-top-header {
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .mkt-top-left { align-items: center; }
+    .mkt-user-pill { display: none; }
+    .breadcrumb { display: none; }
+
+    .greeting {
+      font-size: 1.4rem;
+      text-align: center;
+    }
+  }
+</style>

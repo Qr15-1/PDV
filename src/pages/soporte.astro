@@ -1,0 +1,21 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Sidebar from "../components/Sidebar.astro";
+import MobileHeader from "../components/MobileHeader.astro";
+---
+
+<Layout>
+  <div class="app-container">
+    <Sidebar />
+
+    <div class="mobile-layout">
+      <MobileHeader />
+
+      <main class="dashboard-panel" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:40px;">
+        <img src="/icons/SOPORTE.png" alt="Soporte" style="width:56px;height:56px;opacity:0.5;" />
+        <h1 style="font-size:1.6rem;font-weight:600;color:var(--text-main);">Soporte</h1>
+        <p style="font-size:0.9rem;color:var(--text-muted);font-style:italic;">Próximamente</p>
+      </main>
+    </div>
+  </div>
+</Layout>

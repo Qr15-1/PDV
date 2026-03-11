@@ -1,0 +1,136 @@
+---
+// src/components/WeekCalendar.astro
+---
+
+<div class="cal-widget">
+  <!-- Tabs -->
+  <div class="cal-tabs">
+    <button class="cal-tab active" data-view="semanal">Semanal</button>
+    <button class="cal-tab" data-view="mensual">Mensual</button>
+    <button class="cal-tab" data-view="anual">Anual</button>
+  </div>
+
+  <!-- Subtítulo -->
+  <p class="cal-subtitle" id="cal-subtitle"></p>
+
+  <!-- Navegación -->
+  <div class="cal-nav">
+    <button class="cal-arrow" id="cal-prev">&#8249;</button>
+    <span class="cal-range" id="cal-range"></span>
+    <button class="cal-arrow" id="cal-next">&#8250;</button>
+  </div>
+
+  <!-- Grid de días -->
+  <div class="cal-grid" id="cal-grid"></div>
+</div>
+
+<script is:inline>
+  (function() {
+    var MESES_ES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+    var selectedWeekStart;
+
+    function getMonday(d) {
+      var date = new Date(d);
+      var day = date.getDay();
+      date.setDate(date.getDate() - (day === 0 ? 6 : day - 1));
+      date.setHours(0,0,0,0);
+      return date;
+    }
+
+    function addDays(d, n) {
+      var r = new Date(d);
+      r.setDate(r.getDate() + n);
+      return r;
+    }
+
+    function pad(n) {
+      return String(n).padStart(2, "0");
+    }
+
+    function isSameDay(a, b) {
+      return a.getDate() === b.getDate() &&
+             a.getMonth() === b.getMonth() &&
+             a.getFullYear() === b.getFullYear();
+    }
+
+    function renderCalendar() {
+      var grid = document.getElementById("cal-grid");
+      var rangeEl = document.getElementById("cal-range");
+      var subtitleEl = document.getElementById("cal-subtitle");
+      if (!grid || !rangeEl || !subtitleEl) return;
+
+      var weekEnd = addDays(selectedWeekStart, 6);
+      var m = MESES_ES[selectedWeekStart.getMonth()];
+      var y = selectedWeekStart.getFullYear();
+      var mEnd = MESES_ES[weekEnd.getMonth()];
+
+      if (m === mEnd) {
+        rangeEl.textContent = m + " " + pad(selectedWeekStart.getDate()) + " - " + pad(weekEnd.getDate()) + ", " + y;
+      } else {
+        rangeEl.textContent = m + " " + pad(selectedWeekStart.getDate()) + " - " + mEnd.slice(0,3) + " " + pad(weekEnd.getDate());
+      }
+      subtitleEl.textContent = "(Datos de " + m + " de " + y + ")";
+
+      grid.innerHTML = "";
+      var today = new Date();
+      today.setHours(0,0,0,0);
+
+      for (var row = 0; row < 3; row++) {
+        for (var col = 0; col < 7; col++) {
+          var day = addDays(selectedWeekStart, row * 7 + col);
+          var btn = document.createElement("button");
+          btn.className = "cal-day";
+
+          if (isSameDay(day, today)) {
+            btn.classList.add("cal-day--today");
+          } else if (day < today) {
+            btn.classList.add("cal-day--past");
+          }
+
+          var monthAbr = MESES_ES[day.getMonth()].slice(0,3).toUpperCase();
+          btn.innerHTML = '<span class="cal-day-month">' + monthAbr + '</span><span class="cal-day-num">' + pad(day.getDate()) + '</span>';
+
+          (function(d) {
+            btn.addEventListener("click", function() {
+              selectedWeekStart = getMonday(d);
+              renderCalendar();
+            });
+          })(day);
+
+          grid.appendChild(btn);
+        }
+      }
+    }
+
+    function initCalendar() {
+      if (!document.getElementById("cal-grid")) return;
+      selectedWeekStart = getMonday(new Date());
+      renderCalendar();
+
+      var prev = document.getElementById("cal-prev");
+      var next = document.getElementById("cal-next");
+      if (prev) prev.addEventListener("click", function() {
+        selectedWeekStart = addDays(selectedWeekStart, -7);
+        renderCalendar();
+      });
+      if (next) next.addEventListener("click", function() {
+        selectedWeekStart = addDays(selectedWeekStart, 7);
+        renderCalendar();
+      });
+
+      document.querySelectorAll(".cal-tab").forEach(function(btn) {
+        btn.addEventListener("click", function() {
+          document.querySelectorAll(".cal-tab").forEach(function(b) { b.classList.remove("active"); });
+          btn.classList.add("active");
+        });
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initCalendar);
+    } else {
+      initCalendar();
+    }
+    document.addEventListener("astro:page-load", initCalendar);
+  })();
+</script>

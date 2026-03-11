@@ -1,0 +1,40 @@
+---
+// src/components/NewsPanel.astro
+
+interface Props {
+  noticias?: { id: number; titulo: string; icono_slug?: string }[];
+}
+
+const { noticias = [] } = Astro.props;
+---
+
+<div class="news-panel">
+  <h3 class="news-title">Noticias De Verdad</h3>
+
+  {noticias.length > 0 ? (
+    <ul class="news-list">
+      {noticias.map((noticia) => (
+        <li class="news-item">
+          <img
+            src={`/icons/${noticia.icono_slug ?? "enlace+"}.png`}
+            alt=""
+            class="news-icon"
+          />
+          <span class="news-text">{noticia.titulo}</span>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="news-empty">Sin noticias disponibles</p>
+  )}
+</div>
+
+<style>
+  .news-empty {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 24px 0;
+    font-style: italic;
+  }
+</style>

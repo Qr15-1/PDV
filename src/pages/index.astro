@@ -1,0 +1,282 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import MobileHeader from '../components/MobileHeader.astro';
+import SalesChart from '../components/SalesChart.astro';
+import WeekCalendar from '../components/WeekCalendar.astro';
+import SupportCard from '../components/SupportCard.astro';
+import NewsPanel from '../components/NewsPanel.astro';
+import MetricCard from '../components/MetricCard.astro';
+import { getResumenData } from '../services/resumenService.js';
+import '../styles/metrics.css';
+import '../styles/dashboard-body.css';
+import '../styles/calendar.css';
+
+// Consumir datos del servicio (servidor)
+const { metricas, noticias, usuario, grafica_ventas } = await getResumenData();
+
+// Formatear valores para mostrar
+const ventasStr = metricas.ventas_mes != null
+  ? `$${metricas.ventas_mes.toLocaleString('es-VE', { minimumFractionDigits: 2 })}`
+  : null;
+const costoStr = metricas.costo_producto != null
+  ? `${metricas.costo_producto}%`
+  : null;
+const ticketStr = metricas.ticket_promedio != null
+  ? `$${metricas.ticket_promedio}`
+  : null;
+const pizzaStr = metricas.pizza_mas_vendida ?? null;
+const pickupStr = metricas.venta_pickup != null
+  ? `$${metricas.venta_pickup.toLocaleString('es-VE', { minimumFractionDigits: 2 })}`
+  : null;
+const nombreUsuario = usuario.nombre ?? 'Usuario';
+
+// Iconos PNG para las métricas (nuevos archivos en Git)
+const iconVentas  = '/icons/VENTAS.png';
+const iconCosto   = '/icons/COSTO.png';
+const iconTicket  = '/icons/TIKEC.png';
+const iconPizza   = '/icons/PIZZA.png';
+const iconPickup  = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`;
+---
+
+<Layout>
+  <div class="app-container">
+    <Sidebar />
+
+    <div class="mobile-layout">
+      <MobileHeader />
+
+      <main class="dashboard-panel">
+
+    
+      <!--(header + KPIs + chart + calendario) -->
+    
+      <div class="left-col">
+
+        <!-- NIVEL 1: Header -->
+        <header class="top-header-left">
+          <nav class="breadcrumb">
+            <img src="/icons/RESUMEN.png" class="breadcrumb-icon" alt="" />
+            <span class="breadcrumb-text">Dashboard / <span class="breadcrumb-current">Resumen</span></span>
+          </nav>
+          <h1 class="greeting" id="greeting-text">Cargando...</h1>
+          <p class="current-date" id="date-text">Cargando fecha...</p>
+        </header>
+
+        <!-- nivel 2: Metricas -->
+        <section class="metrics-row">
+          <MetricCard label="Ventas del mes" value={ventasStr} icon={iconVentas} variant="ventas" />
+          <MetricCard label="Costo de producto" value={costoStr} icon={iconCosto} variant="costo" />
+          <MetricCard label="Ticket promedio" value={ticketStr} icon={iconTicket} variant="ticket" />
+          <MetricCard label="Pizza más vendida" value={pizzaStr} icon={iconPizza} variant="pizza" smallValue />
+          <MetricCard label="Venta por pickup" value={pickupStr} icon={iconPickup} variant="pickup" />
+        </section>
+
+        <!-- nivel 3: Grid inferior Gráfica  Calendario -->
+        <div class="chart-cal-row">
+          <!-- Gráfica -->
+          <div class="chart-section">
+            <SalesChart ventas={grafica_ventas} />
+          </div>
+
+          <!-- Calendario -->
+          <div class="cal-section">
+            <WeekCalendar />
+          </div>
+        </div>
+
+      </div><!-- /left-col -->
+
+     
+      <!-- columna derecha ( Sorporte + noticias) -->
+      
+      <aside class="right-col">
+        <div class="header-actions right-col-header">
+          <div class="user-pill">
+            <span class="username">{nombreUsuario}</span>
+            <div class="user-avatar"></div>
+          </div>
+          <button class="logout-btn" id="main-logout-btn" title="Cerrar sesión">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Cerrar sesión
+          </button>
+        </div>
+        <NewsPanel noticias={noticias} />
+        <SupportCard />
+      </aside>
+
+      </main>
+    </div><!-- /mobile layout -->
+  </div>
+</Layout>
+
+<script>
+  function actualizarHeader() {
+    const hora = new Date().getHours();
+    let saludo = "Buenas noches";
+    if (hora >= 5 && hora < 12) saludo = "Buenos días";
+    else if (hora >= 12 && hora < 19) saludo = "Buenas tardes";
+    const g = document.getElementById("greeting-text");
+    if (g) g.textContent = `${saludo}, gerente.`;
+    const d = document.getElementById("date-text");
+    if (d) {
+      d.textContent = `Hoy es ${new Date().toLocaleDateString("es-ES", {
+        weekday: "long", day: "2-digit", month: "long", year: "numeric",
+      })}.`;
+    }
+  }
+  document.addEventListener("astro:page-load", actualizarHeader);
+</script>
+
+<style>
+  /*  panel: 2 columnas (contenido + noticias) */
+  .dashboard-panel {
+    display: grid !important;
+    grid-template-columns: 1fr 290px;
+    gap: 20px;
+    padding: 36px 32px 36px 44px !important;
+    align-items: start;
+  }
+
+  /*  Columna izquierda  */
+  .left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+  }
+
+  /* Header */
+  .top-header-left { display: flex; flex-direction: column; gap: 4px; }
+  .greeting {
+    font-size: 2.1rem; font-weight: 600; color: var(--text-main);
+    letter-spacing: -0.02em; line-height: 1.1;
+  }
+  .current-date { font-size: 0.8rem; color: var(--text-muted); }
+
+  /* Grid inferior: chart grande */
+  .chart-cal-row {
+    display: grid;
+    grid-template-columns: 1fr 240px;
+    gap: 14px;
+    align-items: stretch;
+  }
+
+  .chart-section {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cal-section {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /*  Columna derecha noticias,soporte  */
+  .right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  /* User pill */
+  .user-pill {
+    background-color: var(--color-user-pill);
+    color: white;
+    padding: 6px 14px 6px 14px;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    width: auto;
+  }
+
+
+
+  .metric-value--sm { font-size: 1.45rem; }
+
+  /*  mobile-layout wrapper (invisible en desktop)  */
+  .mobile-layout {
+    display: contents;
+  }
+
+  /* MÓVIL: reordenar contenido*/
+
+  @media (max-width: 768px) {
+    .mobile-layout {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Panel: columna única, sin márgenes  */
+    .dashboard-panel {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 14px !important;
+      padding: 16px 12px 88px !important;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    /* Ocultar columna derecha  móvil */
+    .right-col { display: none !important; }
+
+    /* left-col como flex column con order */
+    .left-col {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      width: 100%;
+    }
+
+    /* Orden dentro de left-col: 1saludo, 2calendario, 3KPIs, 4gráfica */
+    .top-header-left { order: 1; align-items: center; }
+    .metrics-row     { order: 3; }
+
+    /* chart-cal-row desaparece como caja, sus hijos pasan a ser
+       flex items directos de left-col y pueden tener order propio */
+    .chart-cal-row {
+      display: contents;
+    }
+    .cal-section   { order: 2; width: 100%; }
+    .chart-section { order: 4; width: 100%; }
+
+    /* Mostrar columna derecha en móvil pero sin user-pill */
+    .right-col {
+      display: flex !important;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      padding: 0;
+    }
+    .user-pill { display: none; }
+
+    /* KPIs: 2 columnas en móvil */
+    .metrics-row {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .metric-card { width: 100%; box-sizing: border-box; height: auto; min-height: 110px; }
+
+    /* Greeting centrado y más pequeño */
+    .greeting {
+      font-size: 1.55rem !important;
+      text-align: center;
+    }
+    .current-date { text-align: center; }
+
+    /* Ocultar breadcrumb en móvil */
+    .breadcrumb { display: none; }
+  }
+</style>

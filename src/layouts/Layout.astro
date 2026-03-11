@@ -1,0 +1,33 @@
+---
+import "../styles/global.css";
+import { pwaInfo } from "virtual:pwa-info";
+import pwaScriptUrl from "../pwa.js?url";
+import interaccionesScriptUrl from "../scripts/interacciones.js?url";
+import { ClientRouter } from "astro:transitions";
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Pizza de Verdad</title>
+    <link rel="icon" type="image/png" href="/icons/BETO.png" />
+
+    <!-- Fuente Inter desde Google Fonts (frontend solamente) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
+    <ClientRouter />
+  </head>
+  <body>
+    <slot />
+    <script type="module" src={pwaScriptUrl}></script>
+    <script type="module" src={interaccionesScriptUrl}></script>
+  </body>
+</html>
+
