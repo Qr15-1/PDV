@@ -5,6 +5,9 @@ export interface ResumenMetricas {
     costo_producto: number | null;
     ticket_promedio: number | null;
     pizza_mas_vendida: string | null;
+    venta_pickup: number | null;
+    venta_delivery: number | null;
+    venta_mesa: number | null;
 }
 
 /* Noticia individual */

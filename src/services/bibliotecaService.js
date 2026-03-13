@@ -110,7 +110,6 @@ const SAMPLE_MANUALS = {
       <h2>Reunión de inicio de turno</h2>
       <p>Cada turno comienza con una reunión de 5 minutos donde se revisan: metas del día, promociones activas, y cualquier novedad operativa. Esta reunión es obligatoria y debe documentarse en el libro de turno.</p>
 
-      <h2>Evaluación del desempeño</h2>
       <div class="bib-highlight">
         <p>Cada mes se realiza una evaluación individual. Los criterios incluyen: puntualidad, actitud, velocidad de servicio y cumplimiento de normas de higiene.</p>
       </div>
@@ -133,9 +132,8 @@ const SAMPLE_MANUALS = {
       <p><strong>1.</strong> Descarga la plantilla de inventario desde el sistema POS.</p>
       <p><strong>2.</strong> Recorre cada zona de almacenamiento: refrigerador, congelador, almacén seco y barra de preparación.</p>
       <p><strong>3.</strong> Cuenta cada ítem y registra la cantidad exacta. No redondees.</p>
-      <p><strong>4.</strong> Compara con el inventario teórico del sistema. Si hay diferencias mayores al 5%, documenta y reporta al gerente.</p>
+      <p><strong>4.</strong> Compara con el inventario teórico del sistema. Si hay diferencias mayores al 5%, documenta y reporta al franquisiado.</p>
 
-      <h2>Ingredientes críticos</h2>
       <p>Los siguientes ingredientes nunca deben estar por debajo del stock mínimo: harina (50 kg), queso mozzarella (20 kg), salsa de tomate (30 L), pepperoni (10 kg). Si alguno está en nivel crítico, hacer pedido inmediato.</p>
     `,
   },
@@ -529,6 +527,7 @@ function mapManual(raw) {
     rol: raw.rol ?? "",
     autor: raw.autor ?? "Pizza de Verdad",
     contenido_html: raw.contenido_html ?? null,
+    video_url: raw.video_url ?? null,
   };
 }
 

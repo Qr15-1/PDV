@@ -91,6 +91,22 @@ const manualesJSON = JSON.stringify(manuales);
                 <p>Selecciona un manual para comenzar la lectura</p>
               </div>
             </div>
+            <!-- Video Player (Siempre visible) -->
+            <div id="bib-video-container" class="bib-video-container">
+               <h3 class="bib-video-title">Video Instructivo</h3>
+               <div class="bib-video-wrapper" id="bib-video-wrapper">
+                 <video id="bib-video-player" controls preload="metadata">
+                   <source id="bib-video-source" src="" type="video/mp4">
+                   Tu navegador no soporta el video.
+                 </video>
+                 <div id="bib-video-placeholder" class="bib-video-placeholder">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/><path d="m10 8 6 4-6 4V8Z"/>
+                    </svg>
+                    <span>Video en preparación</span>
+                 </div>
+               </div>
+            </div>
           </div>
 
         </div>
@@ -115,7 +131,7 @@ const manualesJSON = JSON.stringify(manuales);
     if (hora >= 5  && hora < 12) saludo = "Buenos días";
     else if (hora >= 12 && hora < 19) saludo = "Buenas tardes";
     var g = document.getElementById("bib-greeting");
-    if (g) g.textContent = saludo + ", gerente.";
+    if (g) g.textContent = saludo + ", franquisiado.";
     var d = document.getElementById("bib-date");
     if (d) d.textContent = "Hoy es " + new Date().toLocaleDateString("es-ES", {
       weekday: "long", day: "2-digit", month: "long", year: "numeric"
@@ -271,6 +287,25 @@ const manualesJSON = JSON.stringify(manuales);
         content.innerHTML = manual.contenido_html;
       } else {
         content.innerHTML = '<div class="bib-reader-placeholder"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><p>Contenido no disponible aún</p></div>';
+      }
+    }
+
+    // Video logic
+    var videoPlayer     = document.getElementById("bib-video-player");
+    var videoSource     = document.getElementById("bib-video-source");
+    var videoPlaceholder = document.getElementById("bib-video-placeholder");
+
+    if (videoPlayer && videoSource && videoPlaceholder) {
+      if (manual && manual.video_url) {
+        videoSource.src = manual.video_url;
+        videoPlayer.load();
+        videoPlayer.style.display = "block";
+        videoPlaceholder.style.display = "none";
+      } else {
+        videoPlayer.pause();
+        videoSource.src = "";
+        videoPlayer.style.display = "none";
+        videoPlaceholder.style.display = "flex";
       }
     }
 
@@ -436,6 +471,74 @@ const manualesJSON = JSON.stringify(manuales);
     font-size: 0.92rem;
     font-style: italic;
     margin: 0;
+  }
+
+  /* Video Player Styles */
+  .bib-video-container {
+    margin-top: 24px;
+    padding: 16px 0;
+    background: transparent;
+    border: none;
+  }
+
+  .bib-video-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .bib-video-title::before {
+    content: "";
+    display: inline-block;
+    width: 4px;
+    height: 18px;
+    background: var(--color-primary);
+    border-radius: 4px;
+  }
+
+  .bib-video-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  }
+
+  .bib-video-wrapper video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: none; /* Se activa si hay URL */
+  }
+
+  .bib-video-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: rgba(255,255,255,0.4);
+    background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+  }
+
+  .bib-video-placeholder svg {
+    width: 50px;
+    height: 50px;
+  }
+
+  .bib-video-placeholder span {
+    font-size: 0.9rem;
+    font-style: italic;
   }
 
   @media (max-width: 768px) {

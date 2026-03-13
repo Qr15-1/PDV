@@ -29,6 +29,12 @@ const pizzaStr = metricas.pizza_mas_vendida ?? null;
 const pickupStr = metricas.venta_pickup != null
   ? `$${metricas.venta_pickup.toLocaleString('es-VE', { minimumFractionDigits: 2 })}`
   : null;
+const deliveryStr = metricas.venta_delivery != null
+  ? `$${metricas.venta_delivery.toLocaleString('es-VE', { minimumFractionDigits: 2 })}`
+  : null;
+const mesaStr = metricas.venta_mesa != null
+  ? `$${metricas.venta_mesa.toLocaleString('es-VE', { minimumFractionDigits: 2 })}`
+  : null;
 const nombreUsuario = usuario.nombre ?? 'Usuario';
 
 // Iconos PNG para las métricas (nuevos archivos en Git)
@@ -37,6 +43,8 @@ const iconCosto   = '/icons/COSTO.png';
 const iconTicket  = '/icons/TIKEC.png';
 const iconPizza   = '/icons/PIZZA.png';
 const iconPickup  = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`;
+const iconDelivery = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>`;
+const iconMesa = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"></path><path d="m5 8 14 0"></path><path d="M5 13h14"></path></svg>`;
 ---
 
 <Layout>
@@ -70,6 +78,8 @@ const iconPickup  = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none"
           <MetricCard label="Ticket promedio" value={ticketStr} icon={iconTicket} variant="ticket" />
           <MetricCard label="Pizza más vendida" value={pizzaStr} icon={iconPizza} variant="pizza" smallValue />
           <MetricCard label="Venta por pickup" value={pickupStr} icon={iconPickup} variant="pickup" />
+          <MetricCard label="Venta por Delivery" value={deliveryStr} icon={iconDelivery} variant="delivery" />
+          <MetricCard label="Venta en mesa" value={mesaStr} icon={iconMesa} variant="mesa" />
         </section>
 
         <!-- nivel 3: Grid inferior Gráfica  Calendario -->
@@ -117,7 +127,7 @@ const iconPickup  = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none"
     if (hora >= 5 && hora < 12) saludo = "Buenos días";
     else if (hora >= 12 && hora < 19) saludo = "Buenas tardes";
     const g = document.getElementById("greeting-text");
-    if (g) g.textContent = `${saludo}, gerente.`;
+    if (g) g.textContent = `${saludo}, franquisiado.`;
     const d = document.getElementById("date-text");
     if (d) {
       d.textContent = `Hoy es ${new Date().toLocaleDateString("es-ES", {
@@ -132,9 +142,11 @@ const iconPickup  = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none"
   /*  panel: 2 columnas (contenido + noticias) */
   .dashboard-panel {
     display: grid !important;
-    grid-template-columns: 1fr 290px;
-    gap: 20px;
-    padding: 36px 32px 36px 44px !important;
+    grid-template-columns: 1fr 340px;
+    gap: 40px;
+    padding: 40px 80px 40px 80px !important;
+    max-width: 1600px;
+    margin: 0 auto;
     align-items: start;
   }
 
@@ -142,8 +154,15 @@ const iconPickup  = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none"
   .left-col {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
     min-width: 0;
+  }
+
+  .metrics-row {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 16px !important;
+    width: 100% !important;
   }
 
   /* Header */
@@ -179,6 +198,13 @@ const iconPickup  = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none"
     flex-direction: column;
     gap: 14px;
     min-width: 0;
+    margin-top: 108px; /* Ajuste fino de alineación */
+  }
+
+  .right-col-header {
+    position: absolute;
+    top: 40px;
+    right: 80px;
   }
 
   /* User pill */

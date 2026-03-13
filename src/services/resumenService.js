@@ -20,6 +20,8 @@ function emptyData() {
             ticket_promedio: null,
             pizza_mas_vendida: null,
             venta_pickup: null,
+            venta_delivery: null,
+            venta_mesa: null,
         },
         noticias: [],
         usuario: {
@@ -43,6 +45,8 @@ function mapResponse(raw) {
             ticket_promedio: raw?.metricas?.ticket_promedio ?? null,
             pizza_mas_vendida: raw?.metricas?.pizza_mas_vendida ?? null,
             venta_pickup: raw?.metricas?.venta_pickup ?? null,
+            venta_delivery: raw?.metricas?.venta_delivery ?? null,
+            venta_mesa: raw?.metricas?.venta_mesa ?? null,
         },
         noticias: Array.isArray(raw?.noticias)
             ? raw.noticias.map((n) => ({

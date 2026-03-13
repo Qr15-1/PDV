@@ -111,7 +111,7 @@ const posts = [
     if (hora >= 5 && hora < 12) saludo = "Buenos días";
     else if (hora >= 12 && hora < 19) saludo = "Buenas tardes";
     var g = document.getElementById("com-greeting");
-    if (g) g.textContent = saludo + ", gerente.";
+    if (g) g.textContent = saludo + ", franquisiado.";
     var d = document.getElementById("com-date");
     if (d) {
       d.textContent = "Hoy es " + new Date().toLocaleDateString("es-ES", {

@@ -21,7 +21,7 @@ const currentPath = Astro.url.pathname;
           <div class="mkt-top-left">
             <nav class="breadcrumb">
               <img src="/icons/MARKETING.png" class="breadcrumb-icon" alt="" />
-              <span class="breadcrumb-text">Recursos de Marketing / <span class="breadcrumb-current" id="mkt-breadcrumb">Historias</span></span>
+              <span class="breadcrumb-text">Recursos de Marketing / <span class="breadcrumb-current" id="mkt-breadcrumb">Imágenes para estados</span></span>
             </nav>
             <h1 class="greeting" id="mkt-greeting">Cargando...</h1>
             <p class="current-date" id="mkt-date">Cargando fecha...</p>
@@ -43,11 +43,11 @@ const currentPath = Astro.url.pathname;
           <div class="mkt-mobile-dropdown-wrap">
             <button class="mkt-mobile-dropdown" id="mkt-mob-dropdown">
               <img src="/icons/MARKETING.png" class="mkt-mob-dd-icon" alt="" />
-              <span id="mkt-mob-dd-text">Historias</span>
+              <span id="mkt-mob-dd-text">Imágenes para estados</span>
               <span class="mkt-mob-dd-arrow">▼</span>
             </button>
             <div class="mkt-mobile-dropdown-menu" id="mkt-mob-menu">
-              <button class="mkt-mob-opt active" data-cat="historias">Historias</button>
+              <button class="mkt-mob-opt active" data-cat="historias">Estados</button>
               <button class="mkt-mob-opt" data-cat="gradientes">Gradientes</button>
               <button class="mkt-mob-opt" data-cat="ilustraciones">Ilustraciones</button>
               <button class="mkt-mob-opt" data-cat="pngs">PNGs</button>
@@ -61,11 +61,11 @@ const currentPath = Astro.url.pathname;
 
           <!-- ═══ Sidebar categorías ═══ -->
           <div class="mkt-sidebar">
-            <p class="mkt-sidebar-desc">Descarga y utiliza este material aprobado en las historias de WhatsApp y redes sociales de tu tienda</p>
+            <p class="mkt-sidebar-desc">Descarga y utiliza este material aprobado en los estados de WhatsApp y redes sociales de tu tienda</p>
 
             <button class="mkt-cat-btn active" data-cat="historias">
               <svg viewBox="0 0 24 24" class="mkt-cat-icon" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-              Historias
+              Estados
             </button>
             <button class="mkt-cat-btn" data-cat="gradientes">
               <svg viewBox="0 0 24 24" class="mkt-cat-icon" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
@@ -111,7 +111,7 @@ const currentPath = Astro.url.pathname;
   // ══════════════════════════════════════════════════════
   var CATEGORIAS = {
     historias: {
-      titulo:  "Historias para redes",
+      titulo:  "Imágenes para estados",
       desc:    "Formato 1080×1920 (9:16) para Instagram, WhatsApp y TikTok.",
       specs:   [{ icon: "phone", label: "9:16" }, { icon: "download", label: "1080×1920" }],
       secciones: [
@@ -183,7 +183,7 @@ const currentPath = Astro.url.pathname;
           titulo: "Redes sociales",
           items: [
             { slug: "plant-post",     label: "POST\nCUADRADO",   estilo: "t1" },
-            { slug: "plant-historia", label: "HISTORIA\n9:16",   estilo: "t2" },
+            { slug: "plant-historia", label: "ESTADO\n9:16",     estilo: "t2" },
             { slug: "plant-banner",   label: "BANNER\nWEB",      estilo: "t3" },
             { slug: "plant-flyer",    label: "FLYER\nA4",        estilo: "t4" },
           ],
@@ -207,7 +207,7 @@ const currentPath = Astro.url.pathname;
     if (hora >= 5 && hora < 12) saludo = "Buenos días";
     else if (hora >= 12 && hora < 19) saludo = "Buenas tardes";
     var g = document.getElementById("mkt-greeting");
-    if (g) g.textContent = saludo + ", gerente.";
+    if (g) g.textContent = saludo + ", franquisiado.";
     var d = document.getElementById("mkt-date");
     if (d) d.textContent = "Hoy es " + new Date().toLocaleDateString("es-ES", {
       weekday: "long", day: "2-digit", month: "long", year: "numeric"
