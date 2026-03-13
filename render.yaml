@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: pizza-de-verdad
+    env: node
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.0.0
+      - key: WP_API_URL
+        fromEnvVar: WP_API_URL

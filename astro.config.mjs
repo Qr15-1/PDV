@@ -1,9 +1,17 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
 import AstroPWA from '@vite-pwa/astro';
+import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
+  output: 'server',
+  adapter: node({
+    mode: 'standalone',
+  }),
+  server: {
+    host: true,
+    port: 10000,
+  },
   integrations: [
     AstroPWA({
       registerType: 'autoUpdate',
