@@ -148,6 +148,8 @@ const iconMesa = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" st
     max-width: 1600px;
     margin: 0 auto;
     align-items: start;
+    min-height: 0 !important; /* Fix for flex vertical overflow cutting off */
+    overflow-y: auto !important;
   }
 
   /*  Columna izquierda  */

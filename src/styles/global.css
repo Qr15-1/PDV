@@ -82,12 +82,26 @@ body {
   border-radius: var(--radius-panel);
   padding: 40px 50px;
   overflow-y: auto;
+  min-height: 0; /* MUST exist to prevent flex items from bursting out of container */
   min-width: 0;
 }
 
-/* Scrollbar invisible */
+/* Scrollbar invisible (Restaurada a fina y visible para arreglar el corte visual) */
 .dashboard-panel::-webkit-scrollbar {
-  width: 0;
+  width: 6px;
+}
+
+.dashboard-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dashboard-panel::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.1);
+  border-radius: 10px;
+}
+
+.dashboard-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.2);
 }
 
 /* Grids de sección */
