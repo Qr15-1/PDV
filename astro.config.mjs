@@ -10,7 +10,7 @@ export default defineConfig({
   }),
   server: {
     host: true,
-    port: 10000,
+    port: parseInt(process.env.PORT) || 3000,
   },
   integrations: [
     AstroPWA({

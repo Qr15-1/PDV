@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Sidebar from "../components/Sidebar.astro";
 import MobileHeader from "../components/MobileHeader.astro";
+import SedeSelector from "../components/SedeSelector.astro";
 import "../styles/biblioteca.css";
 import { getCategoriasMenu, getAllManuales } from "../services/bibliotecaService.js";
 
@@ -38,6 +39,7 @@ const manualesJSON = JSON.stringify(manuales);
             <p class="current-date" id="bib-date">Cargando fecha...</p>
           </div>
           <div class="header-actions">
+            <SedeSelector />
             <div class="user-pill bib-user-pill">
               <span class="username">username</span>
               <div class="user-avatar"></div>
@@ -116,7 +118,7 @@ const manualesJSON = JSON.stringify(manuales);
   </div>
 </Layout>
 
-<script is:inline>
+<script>
 (function() {
 
   // ── Estado global ──
@@ -125,18 +127,8 @@ const manualesJSON = JSON.stringify(manuales);
   var activeCat   = "";
 
   // ── Greeting & Date ──
-  function updateHeader() {
-    var hora = new Date().getHours();
-    var saludo = "Buenas noches";
-    if (hora >= 5  && hora < 12) saludo = "Buenos días";
-    else if (hora >= 12 && hora < 19) saludo = "Buenas tardes";
-    var g = document.getElementById("bib-greeting");
-    if (g) g.textContent = saludo + ", franquisiado.";
-    var d = document.getElementById("bib-date");
-    if (d) d.textContent = "Hoy es " + new Date().toLocaleDateString("es-ES", {
-      weekday: "long", day: "2-digit", month: "long", year: "numeric"
-    }) + ".";
-  }
+  // (Ahora manejado globalmente por Layout.astro)
+
 
   // ── Parsear datos del servidor ──
   function parseData() {
@@ -357,7 +349,7 @@ const manualesJSON = JSON.stringify(manuales);
   // ── Init ──
   function init() {
     parseData();
-    updateHeader();
+    // updateHeader(); // Eliminado - global
     renderCategories();
     initMobileDropdown();
     initPrint();

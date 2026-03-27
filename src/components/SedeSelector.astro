@@ -1,0 +1,41 @@
+---
+/**
+ * src/components/SedeSelector.astro
+ */
+---
+
+<div class="sede-selector-container sede-selector-wrapper" style="display: none;">
+  <div class="selector-trigger">
+    <div class="selector-label">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+      </svg>
+      <span class="selected-sede-name">Cargando...</span>
+    </div>
+    <div class="selector-arrow">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </div>
+  </div>
+
+  <div class="selector-dropdown">
+    <div class="dropdown-header">Cambiar Sede</div>
+    <div class="sede-options-list options-list">
+    </div>
+  </div>
+</div>
+
+<script>
+  // Script placeholder for Astro compiler extraction
+  console.log("SedeSelector component loaded");
+</script>
+
+<style>
+  .sede-selector-wrapper { position: relative; font-family: inherit; z-index: 1000; }
+  .selector-trigger { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); padding: 8px 16px; border-radius: 100px; display: flex; align-items: center; gap: 12px; cursor: pointer; min-width: 200px; justify-content: space-between; }
+  .selector-label { display: flex; align-items: center; gap: 8px; color: var(--text-main, #333); font-size: 0.85rem; font-weight: 700; }
+  .selector-dropdown { position: absolute; top: calc(100% + 10px); right: 0; width: 220px; background: white; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 16px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); padding: 8px; display: none; z-index: 1001; }
+  .sede-selector-wrapper.open .selector-dropdown { display: block; }
+  .dropdown-header { padding: 8px 12px; font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid rgba(0,0,0,0.05); }
+  :global(.sede-option) { padding: 12px 14px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #444; display: flex; flex-direction: column; }
+  :global(.sede-option.selected) { background: var(--color-primary); color: white !important; }
+</style>

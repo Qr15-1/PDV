@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Sidebar from "../components/Sidebar.astro";
 import MobileHeader from "../components/MobileHeader.astro";
+import SedeSelector from "../components/SedeSelector.astro";
 import "../styles/comunidad.css";
 
 const currentPath = Astro.url.pathname;
@@ -36,6 +37,7 @@ const posts = [
             <p class="current-date" id="com-date">Cargando fecha...</p>
           </div>
           <div class="header-actions">
+            <SedeSelector />
             <div class="user-pill com-user-pill">
               <span class="username">username</span>
               <div class="user-avatar"></div>
@@ -101,24 +103,12 @@ const posts = [
   </div>
 </Layout>
 
-<script is:inline define:vars={{ posts }}>
+<script define:vars={{ posts }}>
 (function() {
 
   // ── Greeting & Date ──
-  function updateHeader() {
-    var hora = new Date().getHours();
-    var saludo = "Buenas noches";
-    if (hora >= 5 && hora < 12) saludo = "Buenos días";
-    else if (hora >= 12 && hora < 19) saludo = "Buenas tardes";
-    var g = document.getElementById("com-greeting");
-    if (g) g.textContent = saludo + ", franquisiado.";
-    var d = document.getElementById("com-date");
-    if (d) {
-      d.textContent = "Hoy es " + new Date().toLocaleDateString("es-ES", {
-        weekday: "long", day: "2-digit", month: "long", year: "numeric"
-      }) + ".";
-    }
-  }
+  // (Ahora manejado globalmente por Layout.astro)
+
 
   // ── Estado ──
   var currentView = "list";
@@ -185,7 +175,7 @@ const posts = [
   }
 
   function init() {
-    updateHeader();
+    // updateHeader(); // Eliminado - global
     initPosts();
     initBack();
     initSearch();

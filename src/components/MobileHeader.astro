@@ -1,12 +1,14 @@
 ---
 // src/components/MobileHeader.astro
+import SedeSelector from "./SedeSelector.astro";
 ---
 
 <header class="mobile-header">
   <img src="/icons/BETO.png" alt="Pizza de Verdad" class="mobile-header-logo" />
   <div class="mobile-header-right">
+    <SedeSelector />
     <div class="mobile-user-pill">
-      <span class="mobile-username">%username%</span>
+      <span class="username mobile-username">Usuario</span>
       <div class="mobile-avatar"></div>
     </div>
     <button class="mobile-logout-btn" id="mobile-logout-btn" title="Cerrar sesión">

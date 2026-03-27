@@ -28,6 +28,16 @@ import { ClientRouter } from "astro:transitions";
     <slot />
     <script type="module" src={pwaScriptUrl}></script>
     <script type="module" src={interaccionesScriptUrl}></script>
+    <script>
+      import { runAuthCheck, attachLogoutListeners } from '../scripts/auth-ui.js';
+      
+      const init = () => {
+        runAuthCheck();
+        attachLogoutListeners();
+      };
+
+      document.addEventListener('astro:page-load', init);
+    </script>
   </body>
 </html>
 

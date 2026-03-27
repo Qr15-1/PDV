@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Sidebar from "../components/Sidebar.astro";
 import MobileHeader from "../components/MobileHeader.astro";
+import SedeSelector from "../components/SedeSelector.astro";
 import "../styles/marketing.css";
 
 const currentPath = Astro.url.pathname;
@@ -27,8 +28,9 @@ const currentPath = Astro.url.pathname;
             <p class="current-date" id="mkt-date">Cargando fecha...</p>
           </div>
           <div class="header-actions">
+            <SedeSelector />
             <div class="user-pill mkt-user-pill">
-              <span class="username">username</span>
+              <span class="username">Usuario</span>
               <div class="user-avatar"></div>
             </div>
             <button class="logout-btn" id="mkt-logout-btn" title="Cerrar sesión">

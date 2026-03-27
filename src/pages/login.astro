@@ -1,0 +1,292 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/global.css';
+---
+
+<Layout>
+  <div class="login-page">
+    <div class="login-card">
+      <div class="login-header">
+        <img src="/icons/BETO.png" alt="Logo Pizza de Verdad" class="login-logo" />
+        <h1>Bienvenido</h1>
+        <p></p>
+      </div>
+
+      <form id="login-form" class="login-form">
+        <div class="form-group">
+          <label for="email">Correo</label>
+          <div class="input-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="input-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <input type="email" id="email" name="email" placeholder="ejemplo@pizza.com" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <div class="input-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="input-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <input type="password" id="password" name="password" placeholder="••••••••" required />
+          </div>
+        </div>
+
+        <div id="error-message" class="error-message hidden"></div>
+
+        <button type="submit" id="login-btn" class="login-submit">
+          <span>Iniciar Sesión</span>
+          <div class="loader hidden"></div>
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <p></p>
+        <p class="demo-info">Inicia con: <b>test@pizza.com</b> / <b>pizza123</b></p>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import { authService } from '../services/authService';
+
+  const form = document.getElementById('login-form') as HTMLFormElement;
+  const loginBtn = document.getElementById('login-btn') as HTMLButtonElement;
+  const errorMsg = document.getElementById('error-message');
+  const loader = loginBtn?.querySelector('.loader');
+  const btnText = loginBtn?.querySelector('span');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(form);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    // UI Feedback
+    if (errorMsg) errorMsg.classList.add('hidden');
+    if (loader) loader.classList.remove('hidden');
+    if (btnText) btnText.style.opacity = '0.5';
+    if (loginBtn) loginBtn.disabled = true;
+
+    const { data, error } = await authService.login(email, password);
+
+    if (error) {
+      if (errorMsg) {
+        errorMsg.textContent = error.message;
+        errorMsg.classList.remove('hidden');
+      }
+      if (loader) loader.classList.add('hidden');
+      if (btnText) btnText.style.opacity = '1';
+      if (loginBtn) loginBtn.disabled = false;
+    } else {
+      window.location.href = '/';
+    }
+  });
+
+  // Redirect if already logged in
+  (async () => {
+    const { data } = await authService.getSession();
+    if (data.session) {
+      window.location.href = '/';
+    }
+  })();
+</script>
+
+<style>
+  .login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at top left, #2a0505 0%, #000 70%);
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .login-card {
+    background: rgba(233, 27, 27, 0.03);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 48px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .login-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .login-logo {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 15px rgba(214, 25, 25, 0.4));
+  }
+
+  .login-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .login-header p {
+    color: #888;
+    font-size: 0.95rem;
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-group label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #bbb;
+    margin-left: 4px;
+  }
+
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    color: #555;
+    pointer-events: none;
+    transition: color 0.3s ease;
+  }
+
+  input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px 16px 14px 48px;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #d11a1a;
+    box-shadow: 0 0 0 4px rgba(209, 26, 26, 0.15);
+  }
+
+  input:focus + .input-icon {
+    color: #d11a1a;
+  }
+
+  .login-submit {
+    margin-top: 8px;
+    background: #d11a1a;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+  }
+
+  .login-submit:hover {
+    background: #e61e1e;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(209, 26, 26, 0.3);
+  }
+
+  .login-submit:active {
+    transform: translateY(0);
+  }
+
+  .login-submit:disabled {
+    background: #661010;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .error-message {
+    background: rgba(255, 0, 0, 0.1);
+    border: 1px solid rgba(255, 0, 0, 0.2);
+    color: #ff6b6b;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .loader {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .login-footer {
+    text-align: center;
+    margin-top: 32px;
+  }
+
+  .login-footer p {
+    font-size: 0.75rem;
+    color: #555;
+    margin-bottom: 12px;
+  }
+
+  .demo-info {
+    color: #888 !important;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px;
+    border-radius: 8px;
+    display: inline-block;
+  }
+
+  .demo-info b {
+    color: #aaa;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .login-card {
+      padding: 32px 24px;
+    }
+  }
+</style>
