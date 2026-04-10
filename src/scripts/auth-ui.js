@@ -1,5 +1,6 @@
 // src/scripts/auth-ui.js
 import { authService } from '../services/authService.js';
+import { fetchMetricasDesdeSupabase } from '../services/resumenService.js';
 
 export async function runAuthCheck() {
   const { data } = await authService.getSession();
@@ -16,14 +17,49 @@ export async function runAuthCheck() {
   if (data.session) {
     updateGlobalUI(data.session.user);
     initSedeSelector(data.session.user);
+    // Cargar métricas reales desde Supabase (client-side)
+    await loadMetricsUI();
   }
 }
 
+// ── Cargar métricas del dashboard en el cliente ────────────────────────────
+async function loadMetricsUI() {
+  try {
+    const data = await fetchMetricasDesdeSupabase();
+    if (!data || !data.metricas) return;
+
+    const m = data.metricas;
+
+    // Actualizar tarjetas de métricas si existen en el DOM
+    const formatCurrency = (v) => v != null ? `$${v.toLocaleString('es-VE', { minimumFractionDigits: 2 })}` : '—';
+    const formatPct = (v) => v != null ? `${v}%` : '—';
+
+    // Buscar elementos .metric-value y actualizarlos
+    const metricCards = document.querySelectorAll('.metric-card');
+    metricCards.forEach(card => {
+      const label = card.querySelector('.metric-label')?.textContent?.toLowerCase() || '';
+      const valueEl = card.querySelector('.metric-value');
+      if (!valueEl) return;
+
+      if (label.includes('ventas del mes') || label.includes('ventas'))      valueEl.textContent = formatCurrency(m.ventas_mes);
+      else if (label.includes('costo'))     valueEl.textContent = formatPct(m.costo_producto);
+      else if (label.includes('ticket'))    valueEl.textContent = formatCurrency(m.ticket_promedio);
+      else if (label.includes('pickup'))    valueEl.textContent = formatCurrency(m.venta_pickup);
+      else if (label.includes('delivery'))  valueEl.textContent = formatCurrency(m.venta_delivery);
+      else if (label.includes('mesa'))      valueEl.textContent = formatCurrency(m.venta_mesa);
+      else if (label.includes('pizza'))     valueEl.textContent = m.pizza_mas_vendida || '—';
+    });
+  } catch (err) {
+    console.error('[auth-ui] Error cargando métricas:', err);
+  }
+}
+
+// ── Selector de Sedes ──────────────────────────────────────────────────────
 export function initSedeSelector(user) {
   const containers = document.querySelectorAll('.sede-selector-container');
   if (containers.length === 0) return;
 
-  if (user && user.sedes && user.sedes.length > 1) {
+  if (user && user.sedes && user.sedes.length > 0) {
     const selectedSedeRaw = localStorage.getItem('pdv_selected_sede');
     let selectedSede = selectedSedeRaw ? JSON.parse(selectedSedeRaw) : user.sedes[0];
 
@@ -71,16 +107,12 @@ export function initSedeSelector(user) {
   }
 }
 
+// ── Actualizar nombre, saludo y fecha en toda la UI ────────────────────────
 export function updateGlobalUI(user) {
   const nombre = user.nombre || 'Franquiciado';
   
-  // Reemplazar todos los placeholders %username% y elementos con clase username
   document.querySelectorAll('.username, .mobile-username').forEach(el => {
     el.textContent = nombre;
-    // Si el texto sigue siendo %username%, forzarlo
-    if (el.innerText.includes('%username%')) {
-      el.innerText = nombre;
-    }
   });
 
   const hora = new Date().getHours();
@@ -102,6 +134,7 @@ export function updateGlobalUI(user) {
   });
 }
 
+// ── Logout ─────────────────────────────────────────────────────────────────
 export async function handleLogout() {
   await authService.logout();
   window.location.href = '/login';

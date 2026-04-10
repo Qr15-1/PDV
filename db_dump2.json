@@ -1,0 +1,30 @@
+{
+  "metricas": [
+    {
+      "id": 1,
+      "sede_id": 1,
+      "semana": 23,
+      "ventas": 1200,
+      "costos": 700
+    },
+    {
+      "id": 2,
+      "sede_id": 2,
+      "semana": 24,
+      "ventas": 850,
+      "costos": 300
+    }
+  ],
+  "sedes": [
+    {
+      "id": 1,
+      "nombre": "PDV Las Mercedes",
+      "codigo": "0001-Anz"
+    },
+    {
+      "id": 2,
+      "nombre": "PDV Chacao",
+      "codigo": "0002-Anz"
+    }
+  ]
+}

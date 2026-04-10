@@ -1,0 +1,22 @@
+{
+  "usuarios": [
+    {
+      "id": "b1b73b64-fc74-4c7f-85d8-0bb4ad76c69b",
+      "usuario": "Roger",
+      "correo": "Roger@prueba.com",
+      "rol": "Franquisiado"
+    }
+  ],
+  "usuarios_sedes": [
+    {
+      "id": 1,
+      "usuario_id": "b1b73b64-fc74-4c7f-85d8-0bb4ad76c69b",
+      "sede_id": 1
+    },
+    {
+      "id": 2,
+      "usuario_id": "b1b73b64-fc74-4c7f-85d8-0bb4ad76c69b",
+      "sede_id": 2
+    }
+  ]
+}
