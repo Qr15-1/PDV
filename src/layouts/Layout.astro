@@ -25,6 +25,17 @@ import { ClientRouter } from "astro:transitions";
     <ClientRouter />
   </head>
   <body>
+    <!-- Pantalla de Carga -->
+    <div id="global-loader" transition:persist="loader">
+      <img src="/icons/BETO.png" alt="Cargando..." class="loader-logo" />
+    </div>
+    <script is:inline>
+      // Ocultar síncronamente al hacer recarga completa (ej: F5 o cambiar sede) si ya hay sesión
+      if (localStorage.getItem('pdv_user_profile') && window.location.pathname !== '/login') {
+         document.getElementById('global-loader').style.display = 'none';
+      }
+    </script>
+
     <slot />
     <script type="module" src={pwaScriptUrl}></script>
     <script type="module" src={interaccionesScriptUrl}></script>

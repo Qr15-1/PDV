@@ -200,3 +200,45 @@ a {
     display: none !important;
   }
 }
+
+/* ── Pantalla de Carga Global ── */
+#global-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--color-bg-dark); /* Fondo oscuro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#global-loader.hidden-loader {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loader-logo {
+  width: 120px;
+  height: 120px;
+  filter: drop-shadow(0 0 20px rgba(209, 26, 26, 0.6));
+  animation: pulseAndFloat 2.5s infinite ease-in-out;
+}
+
+@keyframes pulseAndFloat {
+  0% { 
+    transform: scale(0.95) translateY(0); 
+    filter: drop-shadow(0 0 10px rgba(209, 26, 26, 0.4)); 
+  }
+  50% { 
+    transform: scale(1.05) translateY(-15px); 
+    filter: drop-shadow(0 0 35px rgba(209, 26, 26, 0.9)); 
+  }
+  100% { 
+    transform: scale(0.95) translateY(0); 
+    filter: drop-shadow(0 0 10px rgba(209, 26, 26, 0.4)); 
+  }
+}

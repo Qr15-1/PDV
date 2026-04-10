@@ -6,6 +6,11 @@ export async function runAuthCheck() {
   const { data } = await authService.getSession();
   const isLoginPage = window.location.pathname === '/login';
 
+  const hideLoader = () => {
+    const loader = document.getElementById('global-loader');
+    if (loader) loader.classList.add('hidden-loader');
+  };
+
   if (!data.session && !isLoginPage) {
     window.location.href = '/login';
     return;
@@ -20,6 +25,9 @@ export async function runAuthCheck() {
     // Cargar métricas reales desde Supabase (client-side)
     await loadMetricsUI();
   }
+
+  // Ocultar el loader al finalizar (si no hay redirección)
+  hideLoader();
 }
 
 // ── Cargar métricas del dashboard en el cliente ────────────────────────────
@@ -136,6 +144,11 @@ export function updateGlobalUI(user) {
 
 // ── Logout ─────────────────────────────────────────────────────────────────
 export async function handleLogout() {
+  const loader = document.getElementById('global-loader');
+  if (loader) {
+    loader.style.display = '';
+    loader.classList.remove('hidden-loader');
+  }
   await authService.logout();
   window.location.href = '/login';
 }

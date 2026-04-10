@@ -39,7 +39,7 @@ import '../styles/global.css';
 
       <div class="login-footer">
         <p></p>
-        <p class="demo-info">Acceso exclusivo para franquiciados autorizados</p>
+        <p class="demo-info"></p>
       </div>
     </div>
   </div>
@@ -67,9 +67,17 @@ import '../styles/global.css';
     if (btnText) btnText.style.opacity = '0.5';
     if (loginBtn) loginBtn.disabled = true;
 
+    // Mostrar modal global de Beto al iniciar sesión
+    const globalLoader = document.getElementById('global-loader');
+    if (globalLoader) {
+      globalLoader.style.display = '';
+      globalLoader.classList.remove('hidden-loader');
+    }
+
     const { data, error } = await authService.login(email, password);
 
     if (error) {
+      if (globalLoader) globalLoader.classList.add('hidden-loader');
       if (errorMsg) {
         errorMsg.textContent = error.message;
         errorMsg.classList.remove('hidden');
